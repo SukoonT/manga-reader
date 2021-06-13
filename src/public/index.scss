@@ -1,0 +1,321 @@
+@font-face {
+    font-family: "Roboto";
+    src: url("./font/RobotoCondensed-Regular.ttf");
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: none;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    cursor: default;
+}
+body {
+    font-family: "Roboto";
+    width: 100vw;
+    height: 100vh;
+    color: #ffffff;
+    background: #272727;
+    #app {
+        position: relative;
+        width: 100vw;
+        #landingPage {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            // display: none;
+            grid-template-rows: 15% 85%;
+            grid-template-columns: 100%;
+            justify-content: center;
+            flex-direction: column;
+
+            .appname {
+                // grid-area: header;
+                width: 100%;
+                // height: 100px;
+                h1 {
+                    margin: 40px 0;
+                    text-align: center;
+                }
+                margin-bottom: 20px;
+                border-bottom: 1px solid #8f8f8f;
+            }
+            .navCont {
+                display: flex;
+                position: relative;
+                width: 100%;
+                height: 100%;
+                box-sizing: border-box;
+                .contTab {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    display: flex;
+                    padding: 20px 20px;
+                    box-sizing: border-box;
+                    flex-direction: column;
+                    h2 {
+                        margin-bottom: 10px;
+                        text-align: center;
+                        padding-bottom: 10px;
+                        border-bottom: 1px solid #8f8f8f;
+                    }
+                    button {
+                        background: #353535;
+                        &:hover {
+                            background: #6b6b6b;
+                            outline: none;
+                        }
+                        color: #ffffff;
+                        font-family: "roboto";
+                        font-size: 20px;
+                        font-weight: 200;
+                        cursor: pointer;
+                        padding: 10px 20px;
+                        margin-bottom: 5px;
+                        border-radius: 3px;
+                        border: none;
+                    }
+                    .location-cont {
+                        padding: 10px 10px;
+                        box-sizing: border-box;
+                        height: 100%;
+                        overflow-y: scroll;
+
+                        ol {
+                            counter-reset: countList;
+                            li {
+                                display: flex;
+                                width: 100%;
+                                align-items: center;
+                                // justify-content: space-between;
+                                border-radius: 2px;
+                                margin-bottom: 2px;
+                                border-bottom: 1px solid #6e6e6e;
+                                &:hover {
+                                    background-color: #ffffff4d;
+                                }
+                                a {
+                                    cursor: pointer;
+                                    padding: 5px 5px;
+                                    border-radius: 2px;
+                                    width: 100%;
+                                    &::before {
+                                        counter-increment: countList;
+                                        content: counter(countList) ".\00a0";
+                                    }
+                                }
+                                button {
+                                    margin: 0;
+                                    margin-left: 2px;
+                                    cursor: pointer;
+                                    user-select: none;
+                                    padding: 5px 15px;
+                                    box-sizing: border-box;
+                                    height: 100%;
+                                    border: none;
+                                    color: #ffffff;
+                                    font-size: 20px;
+                                    background: #353535;
+                                    &:hover {
+                                        background: #6b6b6b;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .divider {
+                    width: 20px;
+                    cursor: w-resize;
+                    height: 100%;
+                    background-color: #8f8f8f2d;
+                    // margin: 0 20px;
+                }
+                #locationsTab {
+                    // grid-area: locations;
+                    input {
+                        font-size: 20px;
+                        padding: 10px;
+                        overflow: scroll;
+                        width: auto;
+                        cursor: text;
+                        background: #ffffff10;
+                        color: #ffffff;
+                        font-family: "roboto";
+                        font-weight: 200;
+                        border-radius: 3px;
+                        border: none;
+                        &:focus {
+                            outline: none;
+                        }
+                    }
+                    .location-cont {
+                        ol {
+                            li {
+                                .open-in-reader-btn {
+                                    background: #353535;
+                                    &:hover {
+                                        background: #6b6b6b;
+                                        &::before {
+                                            display: block;
+                                        }
+                                    }
+                                }
+                            }
+                            .already-read {
+                                background: #4a4d5b;
+                                &:hover {
+                                    background-color: #ffffff4d;
+                                }
+                            }
+                        }
+                    }
+                }
+                #bookmarksTab {
+                    // grid-area: bookmark;
+                }
+                #historyTab {
+                    // grid-area: history;
+                }
+            }
+            #contextMenu {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: #000;
+                box-sizing: border-box;
+                padding: 10px 0px;
+                border-radius: 5px;
+                width: 240px;
+                display: none;
+                z-index: 3;
+                user-select: none;
+                ul {
+                    list-style: none;
+                    li {
+                        padding: 10px 15px;
+                        cursor: default;
+                        &:hover {
+                            background: #292929;
+                        }
+                    }
+                }
+            }
+            #fileInfo {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: #000;
+                box-sizing: border-box;
+                padding: 10px 10px;
+                border-radius: 5px;
+                z-index: 2;
+                display: none;
+                flex-direction: column;
+                .info-cont {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 100px 1fr;
+                    .info {
+                        word-wrap: none;
+                    }
+                }
+            }
+        }
+        #reader {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            --nav-height: 70px;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+                width: 10px;
+            }
+            &::-webkit-scrollbar-track {
+                background: none;
+            }
+            &::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                height: 150px;
+                background: #888;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+            nav {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: var(--nav-height);
+                background: #000000;
+                overflow: hidden;
+                display: grid;
+                z-index: 2;
+                grid-template-columns: 70% 30%;
+                .title-info {
+                    width: 100%;
+                    height: 100%;
+                    display: grid;
+                    grid-template-rows: auto auto;
+                    font-size: 20px;
+                }
+                .ctrls {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    align-items: center;
+                    padding: 0 10px;
+                    button {
+                        color: #ffffff;
+                        background: #ffffff10;
+                        font-size: 30px;
+                        border: none;
+                        cursor: pointer;
+                        width: 70px;
+                        height: 100%;
+                        &:hover {
+                            background: #ffffff60;
+                        }
+                    }
+                    input[type="text"] {
+                        font-size: 20px;
+                        cursor: text;
+                        text-align: right;
+                        width: 70px;
+                        padding: 10px 10px;
+                        margin: 0 10px;
+                    }
+                }
+            }
+            .imgCont {
+                width: 100%;
+                display: flex;
+                position: relative;
+                top: var(--nav-height);
+                flex-direction: column;
+                align-items: center;
+                ::-webkit-scrollbar-thumb {
+                    height: 200px;
+                }
+                img {
+                    max-width: 100%;
+                }
+            }
+        }
+    }
+}

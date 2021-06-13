@@ -1,0 +1,407 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "Roboto";
+  src: url("./font/RobotoCondensed-Regular.ttf");
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  cursor: default;
+}
+
+body {
+  font-family: "Roboto";
+  width: 100vw;
+  height: 100vh;
+  color: #ffffff;
+  background: #272727;
+}
+
+body #app {
+  position: relative;
+  width: 100vw;
+}
+
+body #app #landingPage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: 15% 85%;
+      grid-template-rows: 15% 85%;
+  -ms-grid-columns: 100%;
+      grid-template-columns: 100%;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+body #app #landingPage .appname {
+  width: 100%;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #8f8f8f;
+}
+
+body #app #landingPage .appname h1 {
+  margin: 40px 0;
+  text-align: center;
+}
+
+body #app #landingPage .navCont {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body #app #landingPage .navCont .contTab {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 20px 20px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+body #app #landingPage .navCont .contTab h2 {
+  margin-bottom: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #8f8f8f;
+}
+
+body #app #landingPage .navCont .contTab button {
+  background: #353535;
+  color: #ffffff;
+  font-family: "roboto";
+  font-size: 20px;
+  font-weight: 200;
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  border: none;
+}
+
+body #app #landingPage .navCont .contTab button:hover {
+  background: #6b6b6b;
+  outline: none;
+}
+
+body #app #landingPage .navCont .contTab .location-cont {
+  padding: 10px 10px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol {
+  counter-reset: countList;
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #6e6e6e;
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol li:hover {
+  background-color: #ffffff4d;
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol li a {
+  cursor: pointer;
+  padding: 5px 5px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol li a::before {
+  counter-increment: countList;
+  content: counter(countList) ". ";
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol li button {
+  margin: 0;
+  margin-left: 2px;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  padding: 5px 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  height: 100%;
+  border: none;
+  color: #ffffff;
+  font-size: 20px;
+  background: #353535;
+}
+
+body #app #landingPage .navCont .contTab .location-cont ol li button:hover {
+  background: #6b6b6b;
+}
+
+body #app #landingPage .navCont .divider {
+  width: 20px;
+  cursor: w-resize;
+  height: 100%;
+  background-color: #8f8f8f2d;
+}
+
+body #app #landingPage .navCont #locationsTab input {
+  font-size: 20px;
+  padding: 10px;
+  overflow: scroll;
+  width: auto;
+  cursor: text;
+  background: #ffffff10;
+  color: #ffffff;
+  font-family: "roboto";
+  font-weight: 200;
+  border-radius: 3px;
+  border: none;
+}
+
+body #app #landingPage .navCont #locationsTab input:focus {
+  outline: none;
+}
+
+body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-reader-btn {
+  background: #353535;
+}
+
+body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-reader-btn:hover {
+  background: #6b6b6b;
+}
+
+body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-reader-btn:hover::before {
+  display: block;
+}
+
+body #app #landingPage .navCont #locationsTab .location-cont ol .already-read {
+  background: #4a4d5b;
+}
+
+body #app #landingPage .navCont #locationsTab .location-cont ol .already-read:hover {
+  background-color: #ffffff4d;
+}
+
+body #app #landingPage #contextMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px 0px;
+  border-radius: 5px;
+  width: 240px;
+  display: none;
+  z-index: 3;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+body #app #landingPage #contextMenu ul {
+  list-style: none;
+}
+
+body #app #landingPage #contextMenu ul li {
+  padding: 10px 15px;
+  cursor: default;
+}
+
+body #app #landingPage #contextMenu ul li:hover {
+  background: #292929;
+}
+
+body #app #landingPage #fileInfo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px 10px;
+  border-radius: 5px;
+  z-index: 2;
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+body #app #landingPage #fileInfo .info-cont {
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 100px 1fr;
+      grid-template-columns: 100px 1fr;
+}
+
+body #app #landingPage #fileInfo .info-cont .info {
+  word-wrap: none;
+}
+
+body #app #reader {
+  width: 100vw;
+  height: 100vh;
+  display: none;
+  --nav-height: 70px;
+  overflow-x: hidden;
+}
+
+body #app #reader::-webkit-scrollbar {
+  width: 10px;
+}
+
+body #app #reader::-webkit-scrollbar-track {
+  background: none;
+}
+
+body #app #reader::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  height: 150px;
+  background: #888;
+}
+
+body #app #reader::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+body #app #reader nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--nav-height);
+  background: #000000;
+  overflow: hidden;
+  display: -ms-grid;
+  display: grid;
+  z-index: 2;
+  -ms-grid-columns: 70% 30%;
+      grid-template-columns: 70% 30%;
+}
+
+body #app #reader nav .title-info {
+  width: 100%;
+  height: 100%;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: auto auto;
+      grid-template-rows: auto auto;
+  font-size: 20px;
+}
+
+body #app #reader nav .ctrls {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 10px;
+}
+
+body #app #reader nav .ctrls button {
+  color: #ffffff;
+  background: #ffffff10;
+  font-size: 30px;
+  border: none;
+  cursor: pointer;
+  width: 70px;
+  height: 100%;
+}
+
+body #app #reader nav .ctrls button:hover {
+  background: #ffffff60;
+}
+
+body #app #reader nav .ctrls input[type="text"] {
+  font-size: 20px;
+  cursor: text;
+  text-align: right;
+  width: 70px;
+  padding: 10px 10px;
+  margin: 0 10px;
+}
+
+body #app #reader .imgCont {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  top: var(--nav-height);
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+body #app #reader .imgCont ::-webkit-scrollbar-thumb {
+  height: 200px;
+}
+
+body #app #reader .imgCont img {
+  max-width: 100%;
+}
+/*# sourceMappingURL=index.css.map */
