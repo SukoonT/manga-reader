@@ -1,6 +1,6 @@
 # Manga Reader
 
-installer in out folder.  
+installer in app folder.  
 made using electron, jquery.  
 incomplete.
 
