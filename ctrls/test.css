@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  font-size: 20px;
+  overflow: hidden;
+}
+
+body .ctrl-bar {
+  position: absolute;
+  color: #ffffff;
+  border-radius: 100px;
+  right: 0;
+  top: 0;
+  -webkit-filter: url("#goo");
+          filter: url("#goo");
+}
+
+body .ctrl-bar:hover {
+  height: 200px;
+}
+
+body .ctrl-bar .ctrl-menu-item {
+  position: relative;
+  top: 0;
+  background-color: #383838;
+  color: #ffffff;
+  border: none;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  cursor: pointer;
+}
+
+body .ctrl-bar .ctrl-menu-item:hover {
+  background: #797979;
+}
+
+body .ctrl-bar #ctrl-menu-extender {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  z-index: 2;
+}
+
+body .ctrl-bar #ctrl-menu-extender .bar {
+  position: relative;
+  width: 80%;
+  margin: 5px 5px;
+  height: 5px;
+  background: #fff;
+}
+
+body .ctrl-bar .ctrl-menu {
+  display: none;
+}
+/*# sourceMappingURL=test.css.map */
