@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
-        "target": "esnext",
+        "target": "esnext" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */,
+        // "module": "commonjs",
         "moduleResolution": "node",
         "watch": true,
-        "lib": ["dom", "ES2017"]
+        "lib": ["dom", "esnext"]
     },
     "watchOptions": {
         // Use native file system events for files and directories
@@ -13,10 +14,9 @@
         // when they're updated a lot.
         "fallbackPolling": "dynamicPriority",
         // Don't coalesce watch notification
-        "synchronousWatchDirectory": true,
+        "synchronousWatchDirectory": true
         // Finally, two additional settings for reducing the amount of possible
         // files to track  work from these directories
-        "excludeDirectories": ["**/node_modules", "_build"],
-        "excludeFiles": ["build/fileWhichChangesOfent.ts"]
-    }
+    },
+    "exclude": ["node_modules"]
 }

@@ -2,37 +2,74 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Reader</title>
+        <title>Manga Reader</title>
         <script>
             if (typeof module === "object") {
                 window.module = module;
                 module = undefined;
             }
         </script>
-        <script src="./public/jquery-3.5.1.min.js"></script>
-        <script defer src="./renderer.js"></script>
-        <script>
-            if (window.module) module = window.module;
-        </script>
         <link rel="stylesheet" href="./public/index.css" />
+        <script src="./public/jquery-3.5.1.min.js"></script>
+        <script defer src="./public/templates.js"></script>
+        <script defer src="./renderer.js"></script>
     </head>
     <body>
+        <div id="topBar">
+            <div class="titleDragable"></div>
+            <div class="titleBar">
+                <button
+                    class="home"
+                    onClick="location.reload();
+                "
+                >
+                    <i class="fas fa-home"></i>
+                </button>
+                <button
+                    class="githubbtn"
+                    onclick="shell.openExternal('https://github.com/SukoonT/manga-reader')"
+                >
+                    <i class="fab fa-github"></i>
+                </button>
+                <div class="title">Manga Reader</div>
+            </div>
+
+            <div class="titleBarBtns">
+                <div id="pageNumbers" title="Nagivate To Page Number">
+                    <input
+                        type="number"
+                        title="Nagivate To Page Number"
+                        id="NavigateToPageInput"
+                        placeholder="Page Num."
+                        min="1"
+                    /><span class="totalPage">/40</span>
+                </div>
+                <button tabindex="-1" id="minimizeBtn" title="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button tabindex="-1" id="maximizeRestoreBtn" title="Restore">
+                    <i class="far fa-window-restore"></i>
+                </button>
+                <button tabindex="-1" id="closeBtn" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
         <div id="app">
             <div id="landingPage">
-                <div class="appname">
-                    <h1>Reader v4</h1>
-                </div>
                 <div class="navCont">
                     <div class="contTab" id="locationsTab">
                         <h2>Location</h2>
                         <button id="setDefault">Set Default Location</button>
-                        <button id="goback">&lt;</button>
+                        <!-- <button id="goback">&lt;</button> -->
                         <input
                             type="text"
                             name=""
                             id="locationInput"
-                            placeholder="book/chapter"
+                            placeholder="Type to Search"
+                            title="Type to Search"
                         />
                         <div class="location-cont"></div>
                     </div>
@@ -45,49 +82,137 @@
                     </div>
                     <div class="divider"></div>
                     <div class="contTab" id="historyTab">
-                        <h2>History</h2>
+                        <h2>
+                            History
+                            <button onClick="clearHistory()">
+                                <i
+                                    class="fas fa-trash"
+                                    style="cursor: pointer"
+                                ></i>
+                            </button>
+                        </h2>
                         <div class="location-cont">
                             <ol></ol>
                         </div>
                     </div>
                 </div>
-                <div id="contextMenu"></div>
-                <div id="fileInfo">
-                    <div class="info-cont manga">
-                        <div class="title"></div>
-                        <div class="info"></div>
-                    </div>
-                    <div class="info-cont chapter">
-                        <div class="title"></div>
-                        <div class="info"></div>
-                    </div>
-                    <div class="info-cont pages">
-                        <div class="title"></div>
-                        <div class="info"></div>
-                    </div>
-                    <div class="info-cont date">
-                        <div class="title"></div>
-                        <div class="info"></div>
-                    </div>
+            </div>
+
+            <div id="contextMenu"></div>
+            <div id="fileInfo">
+                <div class="info-cont manga">
+                    <div class="title"></div>
+                    <div class="info"></div>
+                </div>
+                <div class="info-cont chapter">
+                    <div class="title"></div>
+                    <div class="info"></div>
+                </div>
+                <div class="info-cont pages">
+                    <div class="title"></div>
+                    <div class="info"></div>
+                </div>
+                <div class="info-cont date">
+                    <div class="title"></div>
+                    <div class="info"></div>
+                </div>
+            </div>
+            <div id="loadingScreen">
+                <div class="loadingBarCont">
+                    <div class="loadingbar"></div>
                 </div>
             </div>
             <div id="reader">
-                <nav>
-                    <div class="title-info">
-                        <h1 class="mangaName">Book</h1>
-                        <h1 class="chapterName">Chapter</h1>
+                <div class="ctrl-bar">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        version="1.1"
+                        style="display: none"
+                    >
+                        <defs>
+                            <filter id="goo">
+                                <feGaussianBlur
+                                    in="SourceGraphic"
+                                    stdDeviation="10"
+                                    result="blur"
+                                />
+                                <feColorMatrix
+                                    in="blur"
+                                    type="matrix"
+                                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                                    result="goo"
+                                />
+                                <feBlend in="SourceGraphic" in2="goo" />
+                            </filter>
+                        </defs>
+                    </svg>
+                    <button
+                        class="ctrl-menu-item ctrl-menu-extender"
+                        id="ctrl-menu-extender"
+                        title="Menu"
+                    >
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </button>
+                    <div class="ctrl-menu">
+                        <button
+                            class="ctrl-menu-item"
+                            id="ctrl-menu-plus"
+                            title="Size +"
+                        >
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button
+                            class="ctrl-menu-item"
+                            id="ctrl-menu-minus"
+                            title="Size -"
+                        >
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button
+                            class="ctrl-menu-item"
+                            id="ctrl-menu-prev"
+                            title="Open Previous"
+                        >
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <button
+                            class="ctrl-menu-item"
+                            id="ctrl-menu-next"
+                            title="Open Next"
+                        >
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button
+                            class="ctrl-menu-item"
+                            id="ctrl-menu-bookmark"
+                            title="Bookmark"
+                        >
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                        <button
+                            class="ctrl-menu-item"
+                            id="ctrl-menu-page"
+                            title="Navigate To Page"
+                            onClick="$('#pageNumbers #NavigateToPageInput').focus()"
+                        >
+                            <i class="far fa-file-alt"></i>
+                        </button>
                     </div>
-                    <div class="ctrls">
-                        <input
-                            type="text"
-                            id="page-input"
-                            placeholder="Page n."
-                        />
-                        <button id="bookmark-btn">B</button>
-                        <button id="size-plus-btn">+</button>
-                        <button id="size-minus-btn">-</button>
+                </div>
+                <div class="currentMangaList">
+                    <input
+                        type="text"
+                        name=""
+                        id="locationInput2"
+                        placeholder="Type to Search"
+                        title="Type to Search"
+                    />
+                    <div class="location-cont">
+                        <ol></ol>
                     </div>
-                </nav>
+                </div>
                 <section class="imgCont"></section>
             </div>
         </div>

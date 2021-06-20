@@ -1,19 +1,35 @@
 const fs = require("fs");
+// !!!
+// !!! remove exports from last time in js file
+// !!!
+
 // const path = require("path");
+//@ts-ignore
 const { clipboard, ipcRenderer, shell } = require("electron");
+//@ts-ignore
 const { app, dialog } = require("@electron/remote");
-const { clearInterval } = require("timers");
 const openInReaderBtn = $(".open-in-reader-btn");
-const inputForm = document.querySelector("#locationInput");
-function removeBM(item) {
-    let index = item.parent().attr("data-list-index");
-}
+const inputForm: HTMLInputElement = document.querySelector("#locationInput");
+
 (function consolelogintro() {
     console.log(
         "Manga Reader Version : " + require("@electron/remote").app.getVersion()
     );
-    console.log(`If you encounter any problem mail me at sukoonkumar2@gmail.com
+    console.log(`
+If you encounter any problem mail me at sukoonkumar2@gmail.com
 
+keyboard shortcuts:-
+
+"wsad and arrow keys"   : scroll
+" - and = and + "       : size
+"spacebar"              : big scroll
+"h"                     : home
+"f"                     : go to page
+"f1"                    : github page
+"< and >"               : next/prev
+"Enter or /"            : focus input box(home page only)
+
+move mouse to left edge for list while in reader.
 
     `);
 })();
@@ -27,7 +43,7 @@ $("#minimizeBtn").click(() => {
 $("#maximizeRestoreBtn").click(() => {
     ipcRenderer.send("maximizeRestoreApp");
 });
-const changeMaxResBtn = (isMaximized) => {
+const changeMaxResBtn = (isMaximized: boolean) => {
     if (isMaximized) {
         $("#maximizeRestoreBtn")
             .attr("title", "Restore")
@@ -45,10 +61,10 @@ ipcRenderer.on("isRestored", () => {
     changeMaxResBtn(false);
 });
 //readerWidth
-let readerWidth = parseFloat(localStorage.getItem("readerWidth")) || 50;
+let readerWidth: number = parseFloat(localStorage.getItem("readerWidth")) || 50;
 
 //get manga path sync
-let mangaPath = localStorage.getItem("defaultPath");
+let mangaPath: string = localStorage.getItem("defaultPath");
 if (mangaPath === null) {
     let res = dialog.showMessageBoxSync({
         type: "error",
@@ -59,10 +75,11 @@ if (mangaPath === null) {
 }
 handleContextMenu();
 //set default location button
-document.querySelector("#setDefault").onclick = () =>
+document.querySelector("#setDefault").addEventListener("click", () => {
     promptSetDefaultLocation();
+});
 //prompt to set default location
-function promptSetDefaultLocation() {
+function promptSetDefaultLocation(): void {
     let abc = dialog.showOpenDialogSync({
         properties: ["openFile", "openDirectory"],
     });
@@ -84,30 +101,35 @@ function promptSetDefaultLocation() {
 }
 
 //historylist
-let historyPaths =
+let historyPaths: ListItem[] =
     (localStorage.getItem("historyPaths") === ""
         ? []
         : JSON.parse(localStorage.getItem("historyPaths"))) || [];
 (function () {
+    if (historyPaths.length === 0) {
+        $("#historyTab .location-cont").html(`<p>No items</p>`);
+        return;
+    }
     historyPaths.forEach((e) => {
-        $("#historyTab .location-cont ol").append(
-            historyListItem(e, path.normalize(e.link))
-        );
+        $("#historyTab .location-cont ol").append(historyListItem(e));
     });
 })();
 //bookmarkist
-let bookmarkPaths = JSON.parse(localStorage.getItem("bookmarkPaths")) || [];
+let bookmarkPaths: ListItem[] =
+    JSON.parse(localStorage.getItem("bookmarkPaths")) || [];
 (function () {
+    if (bookmarkPaths.length === 0) {
+        $("#bookmarksTab .location-cont").html(`<p>No items</p>`);
+        return;
+    }
     bookmarkPaths.forEach((e) => {
-        $("#bookmarksTab .location-cont ol").append(
-            bookmarkListItem(e, path.normalize(e.link))
-        );
+        $("#bookmarksTab .location-cont ol").append(bookmarkListItem(e));
     });
 })();
-let currentList = [];
-let parentLink;
+let currentList: string[] = [];
+let parentLink: string | string[];
 addToLocationList(mangaPath);
-function addToLocationList(link) {
+function addToLocationList(link: string): void {
     link = path.normalize(link);
     inputForm.value = "";
     fs.readdir(link, "utf-8", (err, data) => {
@@ -119,7 +141,7 @@ function addToLocationList(link) {
         currentList = data;
         let historyPathsLinks = historyPaths.map((e) => e.link);
         data.forEach((e) => {
-            alreadyRead = false;
+            let alreadyRead = false;
             if (historyPathsLinks.includes(path.normalize(link + e + "/"))) {
                 alreadyRead = true;
             }
@@ -131,18 +153,18 @@ function addToLocationList(link) {
     });
 }
 // ! removed async;
-function getNextList(link) {
+function getNextList(link): void {
     link = path.normalize(link);
     fs.readdir(link, "utf-8", (err, data) => {
         let suggestionsText = "";
         currentList = data;
         data = data.sort((a, b) => {
-            num1 = a
+            let num1: string = a
                 .toString()
                 .replace(/([a-z]|\,|\(|\)|\-|_)/gi, "")
                 .split(" ")
                 .filter((e) => e != "")[0];
-            num2 = b
+            let num2: string = b
                 .toString()
                 .replace(/([a-z]|\,|\(|\)|\-|_)/gi, "")
                 .split(" ")
@@ -165,7 +187,7 @@ function getNextList(link) {
         let historyPathsLinks = historyPaths.map((e) => e.link);
 
         data.forEach((e) => {
-            alreadyRead = false;
+            let alreadyRead = false;
             if (historyPathsLinks.includes(path.normalize(link + e + "/"))) {
                 alreadyRead = true;
             }
@@ -176,17 +198,18 @@ function getNextList(link) {
         ).innerHTML = `<ol>${suggestionsText}</ol>`;
     });
 }
-function putIntoInput(name, link) {
+function putIntoInput(name: string, link: string): void {
     link = path.normalize(link);
     inputForm.value = "";
     inputForm.value += name + "/";
     getNextList(link);
 }
+// find on input
 (function () {
-    // inputForm.onfocus = () => {
-    //     inputForm.selectionStart = inputForm.value.length;
-    //     inputForm.select();
-    // };
+    inputForm.onfocus = () => {
+        inputForm.select();
+    };
+
     inputForm.oninput = () => {
         if (inputForm.value === "") {
             getNextList(mangaPath + "/");
@@ -198,18 +221,15 @@ function putIntoInput(name, link) {
         let regex = new RegExp(value, "gi");
         currentList.forEach((e) => {
             if (inputForm.value !== "" && !e.toLowerCase().includes(value)) {
-                $('a[data-name="' + e + '"]')
+                $('#locationsTab a[data-name="' + e + '"]')
                     .parent()
                     .hide();
                 return;
             }
-            $('a[data-name="' + e + '"]')
+            $('#locationsTab a[data-name="' + e + '"]')
                 .parent()
                 .show();
         });
-        // document.querySelector(
-        //     "#locationsTab > div.location-cont"
-        // ).innerHTML =
     };
     inputForm.onkeydown = (e) => {
         if (e.key === "Enter" || e.key === "/") {
@@ -217,12 +237,36 @@ function putIntoInput(name, link) {
             getNextList(mangaPath + link + "/");
         }
     };
+    $("#locationInput2").on("input", () => {
+        let valueraw = (<HTMLInputElement>$("#locationInput2")[0]).value
+            .toLowerCase()
+            .split("/");
+        let value = (<HTMLInputElement>$("#locationInput2")[0]).value
+            .toLowerCase()
+            .split("/")[valueraw.length - 1];
+        let regex = new RegExp(value, "gi");
+        currentList.forEach((e) => {
+            //(<HTMLInputElement>$("#locationInput2")[0]).value !== "" &&
+            if (!e.toLowerCase().includes(value)) {
+                $('.currentMangaList a[data-name="' + e + '"]')
+                    .parent()
+                    .hide();
+                return;
+            }
+            $('.currentMangaList a[data-name="' + e + '"]')
+                .parent()
+                .show();
+        });
+    });
 })();
-let currentLink;
-let prevLink;
-let nextLink;
-let currentPage;
-function makeImg(link) {
+let currentLink: string;
+let prevLink: string;
+let nextLink: string;
+let currentPage: number;
+let isCurrentMangaList: boolean = false;
+let readerOpen: boolean = false;
+
+function makeImg(link: string): void {
     link = link + "\\";
     link = path.normalize(link);
     try {
@@ -239,12 +283,10 @@ function makeImg(link) {
     parentLink = link.split("\\").filter((e) => e != "");
     parentLink.pop();
     parentLink = path.normalize(parentLink.join("\\"));
-    getNextList(parentLink);
-    console.log(currentLink, parentLink);
-    let files = fs.readdirSync(link, "utf8");
+    let files: string[] = fs.readdirSync(link, "utf8");
     let supportedExt = [".jpg", ".jpeg", ".png", ".gif", ".webg"];
     let invalidText = "";
-    let imgs = files
+    let imgs: { name: string; ext: string }[] = files
         .map((file) => {
             if (supportedExt.includes(path.extname(file))) {
                 return {
@@ -278,15 +320,14 @@ function makeImg(link) {
         });
         return;
     }
+    getNextList(parentLink);
     $("#loadingScreen ").css({ display: "grid" });
     $("#loadingScreen .loadingBarCont .loadingbar").css("width", "0");
-    // $("#loadingScreen ").animate({ top: 0 }, 500, () => {
     $("#landingPage").hide();
-    // });
     let pagenum = 0;
     let percentPerImg = 100 / imgs.length;
     let loaderWidth = 0;
-    //$("#loadingScreen .loadingBarCont .loadingbar")
+    $("#reader .imgCont").html("");
     setTimeout(() => {
         imgs.forEach((img) => {
             pagenum++;
@@ -295,37 +336,15 @@ function makeImg(link) {
                 "width",
                 loaderWidth + "%"
             );
-            let imgData = fs.readFileSync(link + img.name).toString("base64");
-            // let out = `<img src="data:image/${img.ext};base64, ${imgData}" data-pageNum="${pagenum}"/ title="${img.name}">`;
+            // let imgData :string= fs.readFileSync(link + img.name).toString("base64");
+            // let out:string = `<img src="data:image/${img.ext};base64, ${imgData}" data-pageNum="${pagenum}"/ title="${img.name}">`;
             let out = `<img src="${
                 link + img.name
-            }" data-pageNum="${pagenum}"/ title="${
+            }" data-pageNum="${pagenum}" title="${
                 img.name
             }" style="width:${readerWidth}%">`;
             $("#reader .imgCont").append(out);
         });
-        setTimeout(() => {
-            $("#loadingScreen ").hide();
-            prevLink = $(
-                "#locationsTab .location-cont ol li a[data-link='" +
-                    currentLink.replace(/\\/g, "\\\\"),
-                +"']"
-            )
-                .parent()
-                .prev()
-                .find("a")
-                .attr("data-link");
-            nextLink = $(
-                "#locationsTab .location-cont ol li a[data-link='" +
-                    currentLink.replace(/\\/g, "\\\\"),
-                +"']"
-            )
-                .parent()
-                .next()
-                .find("a")
-                .attr("data-link");
-        }, 400);
-
         let name = link
             .split("/")
             .join("\\")
@@ -344,7 +363,7 @@ function makeImg(link) {
             $("#topBar .titleBar .title").html(title);
         }
         $("#topBar .titleBar .title").attr("title", title);
-        let abc = {
+        let abc: ListItem = {
             mangaName: mangaName,
             chapterName: chapterName,
             link: link,
@@ -353,14 +372,69 @@ function makeImg(link) {
         };
         // change page number on top;
         currentPage = 1;
-        $("#pageNumbers #NavigateToPageInput").val(currentPage);
+        $("#NavigateToPageInput").val(currentPage);
         $("#pageNumbers .totalPage").text("/" + pagenum);
         historyPaths.unshift(abc);
         historyPaths.length =
             historyPaths.length < 60 ? historyPaths.length : 60;
         localStorage.setItem("historyPaths", JSON.stringify(historyPaths));
         $("#reader").show();
+        readerOpen = true;
         $("#pageNumbers").css({ visibility: "visible" });
+        setTimeout(() => {
+            $("#loadingScreen ").hide();
+            // make side list
+            // if (!isCurrentMangaList) {
+            let historyPathsLinks = historyPaths.map((e) => e.link);
+            $(".currentMangaList .location-cont ol").html(" ");
+            currentList.forEach((e) => {
+                let alreadyRead = false;
+                if (
+                    historyPathsLinks.includes(
+                        path.normalize(path.join(parentLink, e, "\\"))
+                    )
+                ) {
+                    alreadyRead = true;
+                }
+                let imgLength: string[] = fs
+                    .readdirSync(
+                        path.normalize(path.join(parentLink, e, "\\")),
+                        "utf8"
+                    )
+                    .filter((e) => {
+                        if (supportedExt.includes(path.extname(e))) return e;
+                    });
+                let imgItem: ListItem = {
+                    mangaName: mangaName,
+                    chapterName: e,
+                    link: path.normalize(path.join(parentLink, e, "\\")),
+                    pages: imgLength.length,
+                };
+                $(".currentMangaList .location-cont ol").append(
+                    readerListItem(imgItem, alreadyRead)
+                );
+            });
+            isCurrentMangaList = true;
+            // }
+            prevLink = $(
+                ".currentMangaList .location-cont ol li a[data-link='" +
+                    currentLink.replace(/\\/g, "\\\\") +
+                    "']"
+            )
+                .parent()
+                .prev()
+                .find("a")
+                .attr("data-link");
+            nextLink = $(
+                ".currentMangaList .location-cont ol li a[data-link='" +
+                    currentLink.replace(/\\/g, "\\\\") +
+                    "']"
+            )
+                .parent()
+                .next()
+                .find("a")
+                .attr("data-link");
+        }, 400);
     }, 100);
 }
 //shorten name when window small
@@ -397,10 +471,10 @@ $(window).on("resize", () => {
 //     addToLocationList(mangaPath);
 // });
 
-$("#ctrl-menu-bookmark").click(() => {
+$("#ctrl-menu-bookmark").on("click", () => {
     addToBookmarksList(currentLink);
 });
-function addToBookmarksList(link) {
+function addToBookmarksList(link: string) {
     link = path.normalize(link);
     if (bookmarkPaths.map((e) => e.link).includes(link)) {
         dialog.showErrorBox("already exist in bookmarks", "");
@@ -415,7 +489,6 @@ function addToBookmarksList(link) {
                 return i;
             }
         });
-    console.log(link);
     let totalPages = $("#reader .imgCont").children("img").length;
     if (totalPages === 0) {
         totalPages = fs.readdirSync(link, "utf8").length;
@@ -430,15 +503,13 @@ function addToBookmarksList(link) {
         pages: totalPages,
     };
     bookmarkPaths.unshift(newBM);
-    $("#bookmarksTab .location-cont ol").prepend(
-        bookmarkListItem(newBM, path.normalize(link))
-    );
+    $("#bookmarksTab .location-cont ol").prepend(bookmarkListItem(newBM));
     localStorage.setItem("bookmarkPaths", JSON.stringify(bookmarkPaths));
 }
 
 //remove bookmark
-function removeBookmark(item, link) {
-    let sure = dialog.showMessageBoxSync({
+function removeBookmark(item: JQuery, link: string): void {
+    let sure: number = dialog.showMessageBoxSync({
         type: "warning",
         message: "are you sure you want to remove bookmark?",
         buttons: ["yes", "no"],
@@ -453,23 +524,34 @@ function removeBookmark(item, link) {
 
 // control bar
 // size control
-$("#ctrl-menu-minus").click(() => {
+$("#ctrl-menu-minus").on("click", () => {
     decImgSize();
 });
-$("#ctrl-menu-plus").click(() => {
-    IncImgSize();
+$("#ctrl-menu-plus").on("click", () => {
+    incImgSize();
 });
 const decImgSize = () => {
     readerWidth -= 5;
     readerWidth = readerWidth < 20 ? 20 : readerWidth;
     $("#reader .imgCont img").css("width", readerWidth + "%");
+    $("#reader").css({ scrollBehavior: "auto" });
+    $(
+        '#reader .imgCont img[data-pagenum="' + currentPage + '"]'
+    )[0].scrollIntoView();
+    $("#reader").css({ scrollBehavior: "smooth" });
     if (!disablePageNumChange) displayPageNumber();
 };
 
-const IncImgSize = () => {
+const incImgSize = () => {
     readerWidth += 5;
     readerWidth = readerWidth > 100 ? 100 : readerWidth;
     $("#reader .imgCont img").css("width", readerWidth + "%");
+    $("#reader").css({ scrollBehavior: "auto" });
+    $(
+        '#reader .imgCont img[data-pagenum="' + currentPage + '"]'
+    )[0].scrollIntoView();
+    $("#reader").css({ scrollBehavior: "smooth" });
+
     if (!disablePageNumChange) displayPageNumber();
 };
 
@@ -484,76 +566,145 @@ const displayPageNumber = () => {
                 )
             ).attr("data-pagenum")
         );
-        $("#pageNumbers #NavigateToPageInput").val(currentPage);
+        $("#NavigateToPageInput").val(currentPage);
         return;
     }
 };
 let disablePageNumChange = false;
-$("#reader").scroll(() => {
+$("#reader").on("scroll", () => {
     if (!disablePageNumChange) displayPageNumber();
 });
-$("#ctrl-menu-next").click(() => {
+$("#ctrl-menu-next").on("click", () => {
     openNextChapter();
 });
-function openNextChapter() {
+function openNextChapter(): void {
+    if (!nextLink) return dialog.showErrorBox("Error", "This chapter was last");
+
     $("#reader .imgCont").html("");
-    makeImg(
-        nextLink ||
-            $(
-                "#locationsTab .location-cont ol li a[data-link='" +
-                    currentLink.replace(/\\/g, "\\\\"),
-                +"']"
-            )
-                .parent()
-                .next()
-                .find("a")
-                .attr("data-link")
-    );
+    makeImg(nextLink);
 }
 
-$("#ctrl-menu-prev").click(() => {
+$("#ctrl-menu-prev").on("click", () => {
     openPrevChapter();
 });
-function openPrevChapter() {
+function openPrevChapter(): void {
+    if (!prevLink)
+        return dialog.showErrorBox("Error", "This chapter was first");
+
     $("#reader .imgCont").html("");
-    makeImg(
-        prevLink ||
-            $(
-                "#locationsTab .location-cont ol li a[data-link='" +
-                    currentLink.replace(/\\/g, "\\\\"),
-                +"']"
-            )
-                .parent()
-                .prev()
-                .find("a")
-                .attr("data-link")
-    );
+    makeImg(prevLink);
 }
-$("#pageNumbers #NavigateToPageInput").click(() => {
-    $("#pageNumbers #NavigateToPageInput").select();
-});
-$("#pageNumbers #NavigateToPageInput").focus(() => {
-    $("#pageNumbers #NavigateToPageInput").on("keyup", (e) => {
-        // console.log(e.key);
+$("#NavigateToPageInput").on("focus", () => {
+    $("#NavigateToPageInput").trigger("select");
+    $("#NavigateToPageInput").on("keyup", (e) => {
         if (/[0-9]/gi.test(e.key) || e.key == "Backspace") {
-            let pagenum = $("#pageNumbers #NavigateToPageInput").val();
+            //@ts-ignore
+            let pagenum: number = parseInt($("#NavigateToPageInput").val());
             if (
                 !pagenum ||
                 pagenum > $("#reader .imgCont img").length ||
-                pagenum == ""
+                pagenum === undefined
             ) {
                 return;
             }
             let img = $('#reader .imgCont img[data-pagenum="' + pagenum + '"]');
             disablePageNumChange = true;
-            img[0].scrollIntoView();
+            img[0].scrollIntoView({ behavior: "smooth" });
         }
         if (e.key == "Enter" || e.key == "Escape") {
-            $("#pageNumbers #NavigateToPageInput").blur();
+            $("#NavigateToPageInput").trigger("blur");
             disablePageNumChange = false;
         }
     });
-    $("#pageNumbers #NavigateToPageInput").val(currentPage);
+    $("#NavigateToPageInput").val(currentPage);
+});
+$("#NavigateToPageInput").on("blur", () => {
+    disablePageNumChange = false;
+});
+const clearHistory = () => {
+    let sure = dialog.showMessageBoxSync({
+        type: "warning",
+        message: "are you sure you want to clear history?",
+        buttons: ["yes", "no"],
+    });
+    if (sure === 0) {
+        historyPaths = [];
+        localStorage.setItem("historyPaths", JSON.stringify(historyPaths));
+        $("#historyTab .location-cont").html(`<p>No items</p>`);
+    }
+};
 
-    console.log("d");
+// keyboard shortcuts
+$(document).on("keydown", (e) => {
+    if (e.key === "Enter" || e.key === "/") {
+        e.preventDefault();
+        inputForm.focus();
+    }
+    if (readerOpen && document.activeElement.tagName === "BODY") {
+        if (e.key === "f") {
+            e.preventDefault();
+            $("#pageNumbers #NavigateToPageInput").trigger("focus");
+        }
+        if (e.key === ".") {
+            //>
+            e.preventDefault();
+            openNextChapter();
+        }
+        if (e.key === ",") {
+            //<
+            e.preventDefault();
+            openPrevChapter();
+        }
+        if (e.key === "h") {
+            //refresh / home
+            e.preventDefault();
+            location.reload();
+        }
+        if (e.key === "b") {
+            //bookmark
+            e.preventDefault();
+            addToBookmarksList(currentLink);
+        }
+        if (e.key === "+" || e.key === "=") {
+            //size plus
+            e.preventDefault();
+            incImgSize();
+        }
+        if (e.key === "-") {
+            //size minus
+            e.preventDefault();
+            decImgSize();
+        }
+        if (e.shiftKey && e.key === " ") {
+            e.preventDefault();
+
+            $("#reader")[0].scrollTop -= window.innerHeight / 1.3;
+            return;
+        }
+        if (e.key === " ") {
+            //space
+            e.preventDefault();
+            $("#reader")[0].scrollTop += window.innerHeight / 1.3;
+        }
+        if (
+            e.key === "ArrowRight" ||
+            e.key === "ArrowDown" ||
+            e.key === "s" ||
+            e.key === "d"
+        ) {
+            //move down
+            e.preventDefault();
+            $("#reader")[0].scrollTop += window.innerHeight / 6;
+        }
+        if (
+            e.key === "ArrowLeft" ||
+            e.key === "ArrowUp" ||
+            e.key === "w" ||
+            e.key === "a"
+        ) {
+            //move up
+            e.preventDefault();
+            $("#reader")[0].scrollTop -= window.innerHeight / 6;
+        }
+    }
 });

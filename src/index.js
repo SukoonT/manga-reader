@@ -1,6 +1,18 @@
-const { app, BrowserWindow, Menu, MenuItem } = require("electron");
+//@ts-ignore
+const {
+    app,
+    BrowserWindow,
+    Menu,
+    MenuItem,
+    globalShortcut,
+    dialog,
+    shell,
+    ipcMain,
+} = require("electron");
+//@ts-ignore
 const path = require("path");
-
+const { electron } = require("process");
+require("@electron/remote/main").initialize();
 if (require("electron-squirrel-startup")) {
     // eslint-disable-line global-require
     app.quit();
@@ -8,8 +20,11 @@ if (require("electron-squirrel-startup")) {
 let mainWindow;
 const createWindow = () => {
     mainWindow = new BrowserWindow({
-        width: 1920,
-        height: 1080,
+        width: 1200,
+        height: 800,
+        minWidth: 940,
+        minHeight: 560,
+        frame: false,
         backgroundColor: "#272727",
         webPreferences: {
             nodeIntegration: true,
@@ -20,42 +35,71 @@ const createWindow = () => {
     });
     mainWindow.maximize();
     mainWindow.loadURL(path.join(__dirname, "/index.html"));
-
-    // mainWindow.webContents.openDevTools();
-    // mainWindow.removeMenu();
+    mainWindow.setMenuBarVisibility(false);
     mainWindow.once("ready-to-show", () => {
         mainWindow.show();
     });
+    ipcMain.on("closeApp", () => {
+        mainWindow.close();
+    });
+    ipcMain.on("minimizeApp", () => {
+        mainWindow.minimize();
+    });
+    ipcMain.on("maximizeApp", () => {
+        mainWindow.maximize();
+    });
+    ipcMain.on("restoreDownApp", () => {
+        mainWindow.restore();
+    });
+    ipcMain.on("maximizeRestoreApp", () => {
+        if (mainWindow.isMaximized()) {
+            mainWindow.restore();
+            return;
+        }
+        mainWindow.maximize();
+    });
+    mainWindow.on("maximize", () => {
+        mainWindow.webContents.send("isMaximized");
+    });
+    mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send("isRestored");
+    });
 };
-
 app.on("ready", () => {
     createWindow();
-    // const contextMenu = new Menu();
-    // contextMenu.append(
-    //     new MenuItem({
-    //         label: "abc1",
-    //     })
-    // );
-    // mainWindow.webContents.on("context-menu", (e, params) => {
-    //     contextMenu.popup(mainWindow, params.x, params.y);
-    // });
-    // const template = [
-    //     {
-    //         label: "demo",
-    //         submenu: [
-    //             {
-    //                 label: "opt1",
-    //             },
-    //             {
-    //                 label: "opt1",
-    //             },
-    //         ],
-    //     },
-    // ];
-    // const menu = Menu.buildFromTemplate(template);
-    // Menu.setApplicationMenu(menu);
+    globalShortcut.register("f1", () => {
+        shell.openExternal("https://github.com/SukoonT/manga-reader");
+    });
+    const template = [
+        {
+            label: "Edit",
+            submenu: [
+                { role: "undo" },
+                { role: "redo" },
+                { role: "cut" },
+                { role: "copy" },
+                { role: "paste" },
+                { role: "pasteandmatchstyle" },
+                { role: "selectall" },
+            ],
+        },
+        {
+            label: "View",
+            submenu: [
+                { role: "reload" },
+                { role: "forceReload" },
+                { role: "toggleDevTools" },
+                { type: "separator" },
+                { role: "resetZoom" },
+                { role: "zoomIn", accelerator: "CommandOrControl+=" },
+                { role: "zoomOut" },
+                { type: "separator" },
+            ],
+        },
+    ];
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
 });
-
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
         app.quit();
@@ -66,4 +110,3 @@ app.on("activate", () => {
         createWindow();
     }
 });
-console.log(app.getPath("appData"));

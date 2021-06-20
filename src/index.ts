@@ -1,3 +1,4 @@
+//@ts-ignore
 const {
     app,
     BrowserWindow,
@@ -8,6 +9,7 @@ const {
     shell,
     ipcMain,
 } = require("electron");
+//@ts-ignore
 const path = require("path");
 const { electron } = require("process");
 require("@electron/remote/main").initialize();
@@ -66,11 +68,9 @@ const createWindow = () => {
 };
 
 app.on("ready", () => {
-    createWindow();
-    dialog.showMessageBoxSync({
-        title: "note",
-        message: "This is not fully build version.\nMany features doesnt work.",
-    });
+    setTimeout(() => {
+        createWindow();
+    }, 2000);
     globalShortcut.register("f1", () => {
         shell.openExternal("https://github.com/SukoonT/manga-reader");
     });
@@ -98,7 +98,6 @@ app.on("ready", () => {
                 { role: "zoomIn", accelerator: "CommandOrControl+=" },
                 { role: "zoomOut" },
                 { type: "separator" },
-                { role: "togglefullscreen" },
             ],
         },
     ];

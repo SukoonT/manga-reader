@@ -1,19 +1,18 @@
 //list generator
-const path = require("path");
+const anime = require("animejs");
+//@ts-ignore
 
+const path = require("path");
 interface ListItem {
     mangaName: string;
     chapterName: string;
-    date: string;
-    pages: string;
+    date?: string;
+    pages: number;
+    link: string;
 }
 
-function locationListItem(e: string, link: string, alreadyRead: string) {
+function locationListItem(e: string, link: string, alreadyRead: boolean) {
     let displayname = e;
-    // let maxlength = document.querySelector("#locationsTab").offsetWidth / 10;
-    // if (e.length > maxlength) {
-    //     displayname = e.substring(0, maxlength) + "...";
-    // }
     link = link + "\\";
     link = path.normalize(link);
     let listClass = "";
@@ -27,11 +26,12 @@ function locationListItem(e: string, link: string, alreadyRead: string) {
     return listItem;
 }
 
-function historyListItem(e: ListItem, link: string) {
+function historyListItem(e: ListItem) {
     let mangaName = e.mangaName;
     let chapterName = e.chapterName;
     let date = e.date;
     let pages = e.pages;
+    let link = e.link;
     link = link + "\\";
     link = path.normalize(link);
     let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}"data-link="${link}" onmouseover="fileInfoOnHover($(this))">${
@@ -39,21 +39,31 @@ function historyListItem(e: ListItem, link: string) {
     }</a></li>`;
     return listItem;
 }
-function bookmarkListItem(e: ListItem, link: string) {
+function bookmarkListItem(e: ListItem) {
     let mangaName = e.mangaName;
     let chapterName = e.chapterName;
     let date = e.date;
     let pages = e.pages;
+    let link = e.link;
     link = link + "\\";
     link = path.normalize(link);
-    // let maxlength = document.querySelector("#locationsTab").offsetWidth / 10;
-    // if (e.length > maxlength) {
-    //     mangaName+" / "+chapterName = e.substring(0, maxlength) + "...";
-    // }
-    // let btn = `<button class="rmv-bkmark-btn" onclick="removeBookmark($(this).parent(),$(this).siblings('a').attr('data-link'))">-</button>`;
-    let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}"data-link="${link}" onmouseover="fileInfoOnHover($(this))">${
+    let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}" data-link="${link}" onmouseover="fileInfoOnHover($(this))">${
         mangaName + " / " + chapterName
     }</a></li>`;
+    return listItem;
+}
+function readerListItem(e: ListItem, alreadyRead: boolean) {
+    let mangaName = e.mangaName;
+    let chapterName = e.chapterName;
+    // let date = " ";
+    let pages = e.pages;
+    let link = e.link;
+    link = path.normalize(link + "\\");
+    let listClass = "";
+    if (alreadyRead) {
+        listClass = "already-read";
+    }
+    let listItem = `<li class="${listClass}"><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="" data-link="${link}" onmouseover="fileInfoOnHover($(this))">${chapterName}</a></li>`;
     return listItem;
 }
 
@@ -61,7 +71,7 @@ function fileInfoOnHover(item: JQuery) {
     let manga = item.attr("data-mangaName");
     let chapter = item.attr("data-chapterName");
     let pages = item.attr("data-pages");
-    let date = item.attr("data-date");
+    let date = item.attr("data-date") || "";
 
     let mangacont = `
     <div class="info-cont manga">
@@ -78,7 +88,10 @@ function fileInfoOnHover(item: JQuery) {
         <div class="title">Pages:</div>
         <div class="info">${pages}</div>
     </div>`;
-    let datecont = `
+    let datecont =
+        date === ""
+            ? ""
+            : `
     <div class="info-cont date">
         <div class="title">Date:</div>
         <div class="info">${date}</div>
@@ -124,7 +137,8 @@ function handleContextMenu() {
     const contextMenu = $("#contextMenu");
     $(document).on("contextmenu", (e) => {
         e.preventDefault();
-        if (e.target.classList.contains("a-context")) {
+        if ($(e.target).hasClass("a-context")) {
+            //@ts-ignore
             contextTarget = $(e.target);
             let bookmarkbtn = `<li onclick="addToBookmarksList(contextTarget.attr('data-link'))" id="contextMenu-bookmark">Bookmark</li>`;
             let removebtn = `<li onclick="{removeBookmark(contextTarget.parent(),contextTarget.attr('data-link'))}" id="contextMenu-remove">Remove</li>`;
@@ -137,7 +151,7 @@ function handleContextMenu() {
             contextMenu.html(menu);
             contextMenu.find("li").on("mouseup", () => {
                 setTimeout(() => {
-                    contextTarget = "";
+                    contextTarget = null;
                 }, 500);
                 contextMenu.hide();
             });
@@ -162,11 +176,12 @@ function handleContextMenu() {
                 return;
             }
         }
-        contextTarget = "";
+        contextTarget = null;
         contextMenu.hide();
     });
     $(document).on("mousedown", (e) => {
         if (
+            //@ts-ignore
             e.target.id != "contextMenu" &&
             !$(e.target).parents().get().includes(contextMenu[0])
         ) {
@@ -194,7 +209,7 @@ const extendMenu = () => {
 };
 const closeMenu = () => {
     $("#ctrl-menu-extender").removeClass("ctrl-menu-extender-open");
-    let anim = anime({
+    anime({
         targets: menuItem.toArray(),
         translateY: anime.stagger(
             -parseFloat(anime.get(menuItem[0], "width")),
@@ -208,7 +223,7 @@ const closeMenu = () => {
                 anim.pause();
             }
         },
-        complete: (anim) => {
+        complete: () => {
             $(".ctrl-menu").hide();
             menuExtenderState = "closed";
         },
@@ -216,7 +231,7 @@ const closeMenu = () => {
 };
 
 let menuExtenderState = "closed";
-$("#ctrl-menu-extender").click(() => {
+$("#ctrl-menu-extender").on("click", () => {
     if (menuExtenderState === "closed") {
         extendMenu();
         return;

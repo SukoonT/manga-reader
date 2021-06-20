@@ -33,23 +33,196 @@ body {
   height: 100vh;
   color: #ffffff;
   background: #272727;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  --titleBar-height: 40px;
+  scroll-behavior: smooth;
+  --button-width: 55px;
+}
+
+body #topBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: var(--titleBar-height);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background: #1f1f1f;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+body #topBar .titleBar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+body #topBar .titleBar button {
+  width: var(--button-width);
+  background: none;
+  position: relative;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 3000;
+  border: none;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+body #topBar .titleBar button i {
+  color: #fff;
+  cursor: pointer;
+}
+
+body #topBar .titleBar button:hover {
+  background: #ffffff30;
+}
+
+body #topBar .titleBar .githubbtn {
+  margin-right: calc(var(--button-width) * 3);
+}
+
+body #topBar .titleBar .title {
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 25px;
+}
+
+body #topBar .titleDragable {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  -webkit-app-region: drag;
+}
+
+body #topBar .titleBarBtns {
+  -webkit-app-region: no-drag;
+  position: relative;
+  z-index: 3000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  height: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+body #topBar .titleBarBtns #pageNumbers {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+  visibility: hidden;
+  width: calc(var(--button-width) * 2);
+}
+
+body #topBar .titleBarBtns #pageNumbers .totalPage {
+  display: block;
+  font-size: 25px;
+}
+
+body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput {
+  z-index: inherit;
+  width: calc(var(--button-width) * 1);
+  text-align: right;
+  font-size: 25px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: Roboto;
+  cursor: text;
+  background: #ffffff10;
+  border: none;
+  height: 100%;
+  box-sizing: border-box;
+  color: #ffffff;
+}
+
+body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput::-webkit-outer-spin-button, body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput:focus, body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput:active {
+  background: #ffffff30;
+  outline: none;
+}
+
+body #topBar .titleBarBtns button {
+  z-index: inherit;
+  background: none;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border: none;
+  width: var(--button-width);
+  height: 100%;
+}
+
+body #topBar .titleBarBtns button:focus {
+  outline: none;
+}
+
+body #topBar .titleBarBtns button:hover {
+  background: #ffffff30;
+}
+
+body #topBar .titleBarBtns button i {
+  color: #ffffff;
+  font-size: 16px;
+}
+
+body #topBar .titleBarBtns #closeBtn:hover {
+  background: rgba(232, 17, 35, 0.9);
 }
 
 body #app {
   position: relative;
-  width: 100vw;
+  top: var(--titleBar-height);
+  left: 0;
+  width: 100%;
+  height: calc(100% - var(--titleBar-height));
 }
 
 body #app #landingPage {
   position: relative;
   width: 100%;
-  height: 100vh;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: 15% 85%;
-      grid-template-rows: 15% 85%;
-  -ms-grid-columns: 100%;
-      grid-template-columns: 100%;
+  height: 100%;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -61,13 +234,40 @@ body #app #landingPage {
 
 body #app #landingPage .appname {
   width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   margin-bottom: 20px;
   border-bottom: 1px solid #8f8f8f;
 }
 
 body #app #landingPage .appname h1 {
-  margin: 40px 0;
+  vertical-align: middle;
   text-align: center;
+}
+
+body #app #landingPage .appname h1 button {
+  background: #ffffff10;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+body #app #landingPage .appname h1 button:hover {
+  background: #ffffff30;
+}
+
+body #app #landingPage .appname h1 button i {
+  cursor: pointer;
+  font-size: 20px;
+  color: #ffffff;
 }
 
 body #app #landingPage .navCont {
@@ -97,13 +297,6 @@ body #app #landingPage .navCont .contTab {
           flex-direction: column;
 }
 
-body #app #landingPage .navCont .contTab h2 {
-  margin-bottom: 10px;
-  text-align: center;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #8f8f8f;
-}
-
 body #app #landingPage .navCont .contTab button {
   background: #353535;
   color: #ffffff;
@@ -120,6 +313,20 @@ body #app #landingPage .navCont .contTab button {
 body #app #landingPage .navCont .contTab button:hover {
   background: #6b6b6b;
   outline: none;
+}
+
+body #app #landingPage .navCont .contTab h2 {
+  margin-bottom: 10px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #8f8f8f;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body #app #landingPage .navCont .contTab h2 button {
+  padding: 0 10px;
+  margin: 0;
 }
 
 body #app #landingPage .navCont .contTab .location-cont {
@@ -230,7 +437,7 @@ body #app #landingPage .navCont #locationsTab .location-cont ol .already-read:ho
   background-color: #ffffff4d;
 }
 
-body #app #landingPage #contextMenu {
+body #app #contextMenu {
   position: absolute;
   top: 0;
   left: 0;
@@ -241,27 +448,27 @@ body #app #landingPage #contextMenu {
   border-radius: 5px;
   width: 240px;
   display: none;
-  z-index: 3;
+  z-index: 10000;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
 }
 
-body #app #landingPage #contextMenu ul {
+body #app #contextMenu ul {
   list-style: none;
 }
 
-body #app #landingPage #contextMenu ul li {
+body #app #contextMenu ul li {
   padding: 10px 15px;
   cursor: default;
 }
 
-body #app #landingPage #contextMenu ul li:hover {
+body #app #contextMenu ul li:hover {
   background: #292929;
 }
 
-body #app #landingPage #fileInfo {
+body #app #fileInfo {
   position: absolute;
   top: 0;
   left: 0;
@@ -270,7 +477,7 @@ body #app #landingPage #fileInfo {
           box-sizing: border-box;
   padding: 10px 10px;
   border-radius: 5px;
-  z-index: 2;
+  z-index: 1000;
   display: none;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
@@ -278,7 +485,7 @@ body #app #landingPage #fileInfo {
           flex-direction: column;
 }
 
-body #app #landingPage #fileInfo .info-cont {
+body #app #fileInfo .info-cont {
   width: 100%;
   display: -ms-grid;
   display: grid;
@@ -286,16 +493,170 @@ body #app #landingPage #fileInfo .info-cont {
       grid-template-columns: 100px 1fr;
 }
 
-body #app #landingPage #fileInfo .info-cont .info {
+body #app #fileInfo .info-cont .info {
   word-wrap: none;
+}
+
+body #app #loadingScreen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  background: #1f1f1f;
+  display: -ms-grid;
+  display: grid;
+  place-content: center;
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+body #app #loadingScreen .loadingBarCont {
+  position: relative;
+  width: 60vw;
+  border-radius: 5px;
+  padding: 3px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  height: 30px;
+  border: 1px solid #ffffff;
+}
+
+body #app #loadingScreen .loadingBarCont .loadingbar {
+  position: relative;
+  width: 0;
+  height: 100%;
+  /* border-radius: 5px; */
+  background-color: #7b7b7b;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
 }
 
 body #app #reader {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
+  scroll-behavior: smooth;
   display: none;
-  --nav-height: 70px;
   overflow-x: hidden;
+}
+
+body #app #reader .currentMangaList {
+  background: #1f1f1f;
+  height: 100%;
+  width: 40%;
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  top: 0;
+  padding: 20px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-transform: translateX(-99%);
+          transform: translateX(-99%);
+  -webkit-transition: 0.2s -webkit-transform;
+  transition: 0.2s -webkit-transform;
+  transition: 0.2s transform;
+  transition: 0.2s transform, 0.2s -webkit-transform;
+}
+
+body #app #reader .currentMangaList::before {
+  content: "\f101";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 20px;
+  position: absolute;
+  display: block;
+  right: 0;
+  -webkit-transform: translateX(100%);
+          transform: translateX(100%);
+  top: 0;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: var(--button-width);
+  height: 40px;
+  background: #1f1f1f;
+}
+
+body #app #reader .currentMangaList:hover {
+  -webkit-transform: translateX(0);
+          transform: translateX(0);
+}
+
+body #app #reader .currentMangaList input {
+  font-size: 20px;
+  padding: 10px;
+  margin: 0 auto;
+  overflow: scroll;
+  width: 80%;
+  cursor: text;
+  background: #ffffff10;
+  color: #ffffff;
+  font-family: "roboto";
+  font-weight: 200;
+  border-radius: 3px;
+  border: none;
+}
+
+body #app #reader .currentMangaList input:focus {
+  outline: none;
+}
+
+body #app #reader .currentMangaList .location-cont {
+  margin-top: 5px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+body #app #reader .currentMangaList .location-cont ol {
+  counter-reset: countList;
+}
+
+body #app #reader .currentMangaList .location-cont ol li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 2px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid #6e6e6e;
+}
+
+body #app #reader .currentMangaList .location-cont ol li:hover {
+  background-color: #ffffff4d;
+}
+
+body #app #reader .currentMangaList .location-cont ol li a {
+  cursor: pointer;
+  padding: 5px 5px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+body #app #reader .currentMangaList .location-cont ol li a::before {
+  counter-increment: countList;
+  content: counter(countList) ". ";
+}
+
+body #app #reader .currentMangaList .location-cont ol .already-read {
+  background: #4a4d5b;
+}
+
+body #app #reader .currentMangaList .location-cont ol .already-read:hover {
+  background-color: #ffffff4d;
 }
 
 body #app #reader::-webkit-scrollbar {
@@ -308,7 +669,7 @@ body #app #reader::-webkit-scrollbar-track {
 
 body #app #reader::-webkit-scrollbar-thumb {
   border-radius: 10px;
-  height: 150px;
+  height: 100px;
   background: #888;
 }
 
@@ -316,69 +677,129 @@ body #app #reader::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
-body #app #reader nav {
+body #app #reader .ctrl-bar {
+  --btn-size: 70px;
   position: absolute;
+  color: #ffffff;
+  border-radius: 100px;
+  right: 20px;
+  top: 10px;
+  z-index: 100;
+  -webkit-filter: url("#goo");
+          filter: url("#goo");
+}
+
+body #app #reader .ctrl-bar:hover {
+  height: 200px;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-item {
+  position: relative;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: var(--nav-height);
-  background: #000000;
-  overflow: hidden;
-  display: -ms-grid;
-  display: grid;
-  z-index: 2;
-  -ms-grid-columns: 70% 30%;
-      grid-template-columns: 70% 30%;
-}
-
-body #app #reader nav .title-info {
-  width: 100%;
-  height: 100%;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: auto auto;
-      grid-template-rows: auto auto;
-  font-size: 20px;
-}
-
-body #app #reader nav .ctrls {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: none;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  padding: 10px;
+  border-radius: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 0 10px;
-}
-
-body #app #reader nav .ctrls button {
-  color: #ffffff;
-  background: #ffffff10;
-  font-size: 30px;
-  border: none;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   cursor: pointer;
-  width: 70px;
-  height: 100%;
+  overflow: hidden;
 }
 
-body #app #reader nav .ctrls button:hover {
-  background: #ffffff60;
+body #app #reader .ctrl-bar .ctrl-menu-item:hover {
+  background-color: #6e6e6e;
 }
 
-body #app #reader nav .ctrls input[type="text"] {
-  font-size: 20px;
-  cursor: text;
-  text-align: right;
-  width: 70px;
-  padding: 10px 10px;
-  margin: 0 10px;
+body #app #reader .ctrl-bar .ctrl-menu-item i {
+  font-size: 15px;
+  cursor: pointer;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: relative;
+  z-index: 2;
+  -webkit-transition: 0.2s -webkit-transform;
+  transition: 0.2s -webkit-transform;
+  transition: 0.2s transform;
+  transition: 0.2s transform, 0.2s -webkit-transform;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .bar {
+  cursor: pointer;
+  position: absolute;
+  width: 50%;
+  margin: 3px 0;
+  height: 3px;
+  background: #fff;
+  -webkit-transition: 0.4s all;
+  transition: 0.4s all;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .bar:nth-child(1) {
+  left: 50%;
+  top: 25%;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .bar:nth-child(2) {
+  left: 50%;
+  top: 45%;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .bar:nth-child(3) {
+  left: 50%;
+  top: 65%;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender-open {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .bar:nth-child(1) {
+  -webkit-transform-origin: middle;
+          transform-origin: middle;
+  top: 50%;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .bar:nth-child(2) {
+  width: 0;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .bar:nth-child(3) {
+  -webkit-transform-origin: middle;
+          transform-origin: middle;
+  -webkit-transform: translate(-50%, -50%) rotate(90deg);
+          transform: translate(-50%, -50%) rotate(90deg);
+  top: 50%;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu {
+  display: none;
 }
 
 body #app #reader .imgCont {
@@ -387,7 +808,6 @@ body #app #reader .imgCont {
   display: -ms-flexbox;
   display: flex;
   position: relative;
-  top: var(--nav-height);
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -403,5 +823,125 @@ body #app #reader .imgCont ::-webkit-scrollbar-thumb {
 
 body #app #reader .imgCont img {
   max-width: 100%;
+  min-width: 20%;
+}
+
+.fa,
+.fas,
+.far,
+.fal,
+.fad,
+.fab {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+.fa-home:before {
+  content: "\f015";
+}
+
+.fa-github:before {
+  content: "\f09b";
+}
+
+.fa-minus:before {
+  content: "\f068";
+}
+
+.fa-times:before {
+  content: "\f00d";
+}
+
+.fa-trash:before {
+  content: "\f1f8";
+}
+
+.fa-arrow-down:before {
+  content: "\f063";
+}
+
+.fa-arrow-left:before {
+  content: "\f060";
+}
+
+.fa-arrow-right:before {
+  content: "\f061";
+}
+
+.fa-arrow-up:before {
+  content: "\f062";
+}
+
+.fa-bookmark:before {
+  content: "\f02e";
+}
+
+.fa-file-alt:before {
+  content: "\f15c";
+}
+
+.fa-plus:before {
+  content: "\f067";
+}
+
+.fa-window-maximize:before {
+  content: "\f2d0";
+}
+
+.fa-window-minimize:before {
+  content: "\f2d1";
+}
+
+.fa-window-restore:before {
+  content: "\f2d2";
+}
+
+.fa-angle-right:before {
+  content: "\f105";
+}
+
+@font-face {
+  font-family: "Font Awesome 5 Brands";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("./fontawsome/webfonts/fa-brands-400.woff2") format("woff2");
+}
+
+.fab {
+  font-family: "Font Awesome 5 Brands";
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("./fontawsome/webfonts/fa-regular-400.woff2") format("woff2");
+}
+
+.far {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Font Awesome 5 Free";
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("./fontawsome/webfonts/fa-solid-900.woff2") format("woff2");
+}
+
+.fa,
+.fas {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
 }
 /*# sourceMappingURL=index.css.map */
