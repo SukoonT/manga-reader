@@ -11,7 +11,8 @@ const {
 } = require("electron");
 //@ts-ignore
 const path = require("path");
-const { electron } = require("process");
+// const { electron } = require("process");
+const fetch = require("node-fetch");
 require("@electron/remote/main").initialize();
 
 if (require("electron-squirrel-startup")) {
@@ -31,7 +32,6 @@ const createWindow = () => {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            // preload: path.join(__dirname, 'app.js')
         },
     });
     mainWindow.maximize();
@@ -66,7 +66,38 @@ const createWindow = () => {
         mainWindow.webContents.send("isRestored");
     });
 };
-
+async function checkforupdate() {
+    let rawdata = await fetch(
+        "https://raw.githubusercontent.com/SukoonT/manga-reader/main/package.json"
+    ).then((data) => data.json());
+    let latestVersion = await rawdata.version.split(".");
+    let currentAppVersion = app.getVersion().split(".");
+    if (
+        latestVersion[0] > currentAppVersion[0] ||
+        latestVersion[1] > currentAppVersion[1]
+    ) {
+        dialog
+            .showMessageBox(
+                new BrowserWindow({
+                    show: false,
+                    alwaysOnTop: true,
+                }),
+                {
+                    title: "New Version Available",
+                    message: "New Version Available.\nGo to github?",
+                    buttons: ["Yes", "No"],
+                }
+            )
+            .then((response) => {
+                if (response.response === 0) {
+                    shell.openExternal(
+                        "https://github.com/SukoonT/manga-reader"
+                    );
+                }
+            });
+    }
+}
+checkforupdate();
 app.on("ready", () => {
     setTimeout(() => {
         createWindow();

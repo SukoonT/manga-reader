@@ -1,6 +1,6 @@
 # Manga Reader
 
-v1.0.1
+v0.9.1
 
 ---
 

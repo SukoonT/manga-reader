@@ -435,9 +435,8 @@ body {
                 z-index: 100;
                 position: absolute;
                 left: 0;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
+                display: grid;
+                grid-template-rows: 5% 95%;
                 top: 0;
                 padding: 20px;
                 box-sizing: border-box;
