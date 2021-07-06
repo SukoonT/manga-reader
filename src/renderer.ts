@@ -59,36 +59,6 @@ let readerWidth: number = parseFloat(localStorage.getItem("readerWidth")) || 50;
 
 //get manga path sync
 
-const promptSetDefaultLocation = (): void => {
-    let abc = dialog.showOpenDialogSync({
-        properties: ["openFile", "openDirectory"],
-    });
-    if (abc === undefined && mangaPath === null) {
-        let res = dialog.showMessageBoxSync({
-            type: "error",
-            message: "No folder selected.\nSelect again?",
-            buttons: ["Yes", "Cancel"],
-        });
-        if (res === 0) {
-            promptSetDefaultLocation();
-        }
-        return;
-    } else if (abc) {
-        mangaPath = path.normalize(abc[0] + "\\");
-        localStorage.setItem("defaultPath", mangaPath);
-        inputForm.value = "";
-        getNextList(mangaPath);
-    }
-};
-let mangaPath: string = localStorage.getItem("defaultPath");
-if (mangaPath === null) {
-    let res = dialog.showMessageBoxSync({
-        type: "error",
-        message: "No default location found.\nSelect new location.",
-        buttons: ["OK"],
-    });
-    if (res === 0) promptSetDefaultLocation();
-}
 handleContextMenu();
 //set default location button
 document.querySelector("#setDefault").addEventListener("click", () => {
@@ -127,11 +97,6 @@ $(".nonFocusable").on("focus", (e) => {
     e.preventDefault();
     e.currentTarget.blur();
 });
-let currentList: string[] = [];
-let currentListLink: string = mangaPath;
-let parentLink: string | string[] = mangaPath;
-let parentsList: string[] = [mangaPath];
-// ! removed async;
 const getNextList = (link): void => {
     link = path.normalize(link);
     if (
@@ -178,6 +143,41 @@ const getNextList = (link): void => {
         });
     }
 };
+const promptSetDefaultLocation = (): void => {
+    let abc = dialog.showOpenDialogSync({
+        properties: ["openFile", "openDirectory"],
+    });
+    if (abc === undefined && mangaPath === null) {
+        let res = dialog.showMessageBoxSync({
+            type: "error",
+            message: "No folder selected.\nSelect again?",
+            buttons: ["Yes", "Cancel"],
+        });
+        if (res === 0) {
+            promptSetDefaultLocation();
+        }
+        return;
+    } else if (abc) {
+        mangaPath = path.normalize(abc[0] + "\\");
+        localStorage.setItem("defaultPath", mangaPath);
+        inputForm.value = "";
+        getNextList(mangaPath);
+    }
+};
+let currentList: string[] = [];
+let mangaPath: string = localStorage.getItem("defaultPath");
+if (mangaPath === null) {
+    let res = dialog.showMessageBoxSync({
+        type: "error",
+        message: "No default location found.\nSelect new location.",
+        buttons: ["OK"],
+    });
+    if (res === 0) promptSetDefaultLocation();
+}
+let currentListLink: string = mangaPath;
+let parentLink: string | string[] = mangaPath;
+let parentsList: string[] = [mangaPath];
+// ! removed async;
 inputForm.value = "";
 getNextList(mangaPath);
 
@@ -487,7 +487,7 @@ const makeImg = (link: string): void => {
                 "']"
         )
             .parent()
-            .prev()
+            .next()
             .find("a")
             .attr("data-link");
         nextLink = $(
@@ -498,7 +498,7 @@ const makeImg = (link: string): void => {
                 "']"
         )
             .parent()
-            .next()
+            .prev()
             .find("a")
             .attr("data-link");
         // setTimeout(() => {
