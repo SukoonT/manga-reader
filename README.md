@@ -5,7 +5,7 @@ v0.9.1
 ---
 
 Desktop app for reading downloaded manga.
-**!Not a downloader.**
+**Not a downloader!!!**
 
 ---
 
