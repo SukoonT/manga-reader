@@ -85,10 +85,7 @@
                         <h2>
                             History
                             <button onClick="clearHistory()">
-                                <i
-                                    class="fas fa-trash"
-                                    style="cursor: pointer"
-                                ></i>
+                                <i class="fas fa-trash"></i>
                             </button>
                         </h2>
                         <div class="location-cont">
@@ -147,7 +144,8 @@
                         </defs>
                     </svg>
                     <button
-                        class="ctrl-menu-item ctrl-menu-extender"
+                        class="ctrl-menu-item ctrl-menu-extender nonFocusable"
+                        tabindex="-1"
                         id="ctrl-menu-extender"
                         title="Menu"
                     >
@@ -157,42 +155,48 @@
                     </button>
                     <div class="ctrl-menu">
                         <button
-                            class="ctrl-menu-item"
+                            class="ctrl-menu-item nonFocusable"
+                            tabindex="-1"
                             id="ctrl-menu-plus"
                             title="Size +"
                         >
                             <i class="fas fa-plus"></i>
                         </button>
                         <button
-                            class="ctrl-menu-item"
+                            class="ctrl-menu-item nonFocusable"
+                            tabindex="-1"
                             id="ctrl-menu-minus"
                             title="Size -"
                         >
                             <i class="fas fa-minus"></i>
                         </button>
                         <button
-                            class="ctrl-menu-item"
+                            class="ctrl-menu-item nonFocusable"
+                            tabindex="-1"
                             id="ctrl-menu-prev"
                             title="Open Previous"
                         >
                             <i class="fas fa-arrow-left"></i>
                         </button>
                         <button
-                            class="ctrl-menu-item"
+                            class="ctrl-menu-item nonFocusable"
+                            tabindex="-1"
                             id="ctrl-menu-next"
                             title="Open Next"
                         >
                             <i class="fas fa-arrow-right"></i>
                         </button>
                         <button
-                            class="ctrl-menu-item"
+                            class="ctrl-menu-item nonFocusable"
+                            tabindex="-1"
                             id="ctrl-menu-bookmark"
                             title="Bookmark"
                         >
                             <i class="far fa-bookmark"></i>
                         </button>
                         <button
-                            class="ctrl-menu-item"
+                            class="ctrl-menu-item nonFocusable"
+                            tabindex="-1"
                             id="ctrl-menu-page"
                             title="Navigate To Page"
                             onClick="$('#pageNumbers #NavigateToPageInput').focus()"
@@ -206,9 +210,14 @@
                         type="text"
                         name=""
                         id="locationInput2"
-                        placeholder="Type to Search"
+                        placeholder="Type to Search(Chapter Number)"
+                        tabindex="-1"
                         title="Type to Search"
                     />
+                    <h1>
+                        Manga: <span class="mangaName"></span><br />
+                        Chapter: <span class="chapterName"></span>
+                    </h1>
                     <div class="location-cont">
                         <ol></ol>
                     </div>

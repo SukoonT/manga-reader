@@ -6,7 +6,6 @@ const path = require("path");
 const fetch = require("node-fetch");
 require("@electron/remote/main").initialize();
 if (require("electron-squirrel-startup")) {
-    // eslint-disable-line global-require
     app.quit();
 }
 let mainWindow;
@@ -61,7 +60,8 @@ async function checkforupdate() {
     let latestVersion = await rawdata.version.split(".");
     let currentAppVersion = app.getVersion().split(".");
     if (latestVersion[0] > currentAppVersion[0] ||
-        latestVersion[1] > currentAppVersion[1]) {
+        (latestVersion[0] === currentAppVersion[0] &&
+            latestVersion[1] > currentAppVersion[1])) {
         dialog
             .showMessageBox(new BrowserWindow({
             show: false,
@@ -76,6 +76,7 @@ async function checkforupdate() {
                 shell.openExternal("https://github.com/SukoonT/manga-reader");
             }
         });
+        return;
     }
 }
 checkforupdate();

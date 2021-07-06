@@ -11,7 +11,7 @@ function locationListItem(e, link, alreadyRead) {
         listClass = "already-read";
     }
     let btn = `<button title="Open In Reader" class="open-in-reader-btn" onclick="makeImg($(this).siblings('a').attr('data-link'))"><i class="fas fa-angle-right" style="cursor: pointer;"></i></button>`;
-    let listItem = `<li class="${listClass}"><a class="a-context" onclick="putIntoInput($(this).attr('data-name'),$(this).attr('data-link'))" data-name="${e}" data-link="${path.normalize(link + "\\" + e + "\\")}">${displayname}</a>${btn}</li>`;
+    let listItem = `<li class="${listClass}"><a class="a-context" onclick="getNextList($(this).attr('data-link'))" data-name="${e}" data-link="${path.normalize(link + "\\" + e + "\\")}">${displayname}</a>${btn}</li>`;
     return listItem;
 }
 function historyListItem(e) {
@@ -52,7 +52,13 @@ function readerListItem(e, alreadyRead) {
 }
 function fileInfoOnHover(item) {
     let manga = item.attr("data-mangaName");
+    if (manga.length > 60) {
+        manga = manga.substring(0, 60) + "...";
+    }
     let chapter = item.attr("data-chapterName");
+    if (chapter.length > 60) {
+        chapter = chapter.substring(0, 60) + "...";
+    }
     let pages = item.attr("data-pages");
     let date = item.attr("data-date") || "";
     let mangacont = `
@@ -95,9 +101,9 @@ function fileInfoOnHover(item) {
                 50 -
                 parseFloat($(document.body).css("--titleBar-height"))) {
             y =
-                $(window).height() -
+                y -
                     $("#fileInfo").height() -
-                    50 -
+                    20 -
                     parseFloat($(document.body).css("--titleBar-height"));
         }
         $("#fileInfo").css({ left: x, top: y });
@@ -115,18 +121,25 @@ function handleContextMenu() {
     $(document).on("contextmenu", (e) => {
         e.preventDefault();
         if ($(e.target).hasClass("a-context")) {
-            //@ts-ignore
+            // @ts-ignore
             contextTarget = $(e.target);
-            let bookmarkbtn = `<li onclick="addToBookmarksList(contextTarget.attr('data-link'))" id="contextMenu-bookmark">Bookmark</li>`;
-            let removebtn = `<li onclick="{removeBookmark(contextTarget.parent(),contextTarget.attr('data-link'))}" id="contextMenu-remove">Remove</li>`;
-            let openbtn = `<li onclick="makeImg(contextTarget.attr('data-link'))" id="contextMenu-open">Open</li>`;
-            let copylocationbtn = `<li onclick="clipboard.writeText(contextTarget.attr('data-link'))" id="contextMenu-copy" >Copy Location</li>`;
+            let bookmarkbtn = `<li class="contextMenuOption" onclick="addToBookmarksList(contextTarget.attr('data-link'))" id="contextMenu-bookmark">Bookmark</li>`;
+            let bkRemovebtn = `<li class="contextMenuOption" onclick="{removeBookmark(contextTarget)}" id="contextMenu-remove">Remove</li>`;
+            let hRemovebtn = `<li class="contextMenuOption" onclick="{removeHistory(contextTarget)}" id="contextMenu-remove">Remove</li>`;
+            let openbtn = `<li class="contextMenuOption" onclick="makeImg(contextTarget.attr('data-link'))" id="contextMenu-open">Open</li>`;
+            let copylocationbtn = `<li class="contextMenuOption" onclick="clipboard.writeText(contextTarget.attr('data-link'))" id="contextMenu-copy" >Copy Location</li>`;
             let menu = `<ul>${openbtn} ${bookmarkbtn}  ${copylocationbtn}</ul>`;
             if ($(e.target).parents("#bookmarksTab").length === 1) {
-                menu = `<ul>${openbtn} ${removebtn}  ${copylocationbtn}</ul>`;
+                menu = `<ul>${openbtn} ${bkRemovebtn}  ${copylocationbtn}</ul>`;
+            }
+            if ($(e.target).parents("#historyTab").length === 1) {
+                menu = `<ul>${openbtn}  ${bookmarkbtn} ${hRemovebtn}  ${copylocationbtn}</ul>`;
             }
             contextMenu.html(menu);
-            contextMenu.find("li").on("mouseup", () => {
+            contextMenu.find("li").on("contextmenu", (e) => {
+                e.target.click();
+            });
+            contextMenu.find("li").on("click", (e) => {
                 setTimeout(() => {
                     contextTarget = null;
                 }, 500);
@@ -154,6 +167,7 @@ function handleContextMenu() {
         }
         contextTarget = null;
         contextMenu.hide();
+        return;
     });
     $(document).on("mousedown", (e) => {
         if (
