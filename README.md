@@ -1,6 +1,6 @@
 # Manga Reader
 
-v1.0.1
+[v1.0.2 Download App Here](https://sukoont.github.io/mangareader/)
 
 ---
 
