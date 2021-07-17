@@ -167,7 +167,7 @@ body #topBar .titleBar button:hover {
 }
 
 body #topBar .titleBar .githubbtn {
-  margin-right: calc(var(--button-width) * 3);
+  margin-right: calc(var(--button-width) * 2);
 }
 
 body #topBar .titleBar .title {
