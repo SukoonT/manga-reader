@@ -22,14 +22,25 @@
             <div class="titleBar">
                 <button
                     class="home"
-                    onClick="location.reload();
-                "
+                    onClick="location.reload()"
+                    tabindex="-1"
+                    data-tooltip="Home"
                 >
                     <i class="fas fa-home"></i>
                 </button>
                 <button
+                    class="settingsBtn"
+                    onClick="toggleSettings()"
+                    tabindex="-1"
+                    data-tooltip="Settings"
+                >
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button
                     class="githubbtn"
-                    onclick="shell.openExternal('https://github.com/SukoonT/manga-reader')"
+                    onclick="shell.openExternal('https://github.com/mienaiYami/offline-manga-reader')"
+                    tabindex="-1"
+                    data-tooltip="Github"
                 >
                     <i class="fab fa-github"></i>
                 </button>
@@ -37,15 +48,21 @@
             </div>
 
             <div class="titleBarBtns">
-                <div id="pageNumbers" title="Nagivate To Page Number">
+                <label
+                    id="pageNumbers"
+                    title="Nagivate To Page Number"
+                    for="NavigateToPageInput"
+                    data-tooltip="Navigate To Page Number"
+                >
                     <input
                         type="number"
                         title="Nagivate To Page Number"
                         id="NavigateToPageInput"
                         placeholder="Page Num."
+                        tabindex="-1"
                         min="1"
                     /><span class="totalPage">/40</span>
-                </div>
+                </label>
                 <button tabindex="-1" id="minimizeBtn" title="Minimize">
                     <i class="fas fa-minus"></i>
                 </button>
@@ -62,15 +79,27 @@
                 <div class="navCont">
                     <div class="contTab" id="locationsTab">
                         <h2>Location</h2>
-                        <button id="setDefault">Set Default Location</button>
+                        <!-- <button id="setDefault">Set Default Location</button> -->
                         <!-- <button id="goback">&lt;</button> -->
-                        <input
-                            type="text"
-                            name=""
-                            id="locationInput"
-                            placeholder="Type to Search"
-                            title="Type to Search"
-                        />
+                        <div class="tool">
+                            <input
+                                type="text"
+                                name=""
+                                id="locationInput"
+                                placeholder="Type to Search"
+                                spellcheck="false"
+                                title="Type to Search"
+                                data-tooltip="Type to Search"
+                                tabindex="-1"
+                            />
+                            <button
+                                id="inverseSort"
+                                data-tooltip="Sort"
+                                tabindex="-1"
+                            >
+                                <i class="fas fa-sort"></i>
+                            </button>
+                        </div>
                         <div class="location-cont"></div>
                     </div>
                     <div class="divider"></div>
@@ -84,7 +113,11 @@
                     <div class="contTab" id="historyTab">
                         <h2>
                             History
-                            <button onClick="clearHistory()">
+                            <button
+                                onClick="clearHistory()"
+                                tabindex="-1"
+                                data-tooltip="Clear All"
+                            >
                                 <i class="fas fa-trash"></i>
                             </button>
                         </h2>
@@ -112,6 +145,54 @@
                 <div class="info-cont date">
                     <div class="title"></div>
                     <div class="info"></div>
+                </div>
+            </div>
+            <div id="settings" data-state="closed">
+                <div class="clickClose"></div>
+                <div class="cont">
+                    <h1>Settings</h1>
+                    <div class="content"></div>
+                    <h1>Shortcut Keys</h1>
+                    <div class="shortcutKey">
+                        <table>
+                            <tr>
+                                <th>Key</th>
+                                <th>Function</th>
+                            </tr>
+                            <tr>
+                                <td>- and = and +</td>
+                                <td>size</td>
+                            </tr>
+                            <tr>
+                                <td>wsad and arrow keys</td>
+                                <td>scroll</td>
+                            </tr>
+                            <tr>
+                                <td>spacebar</td>
+                                <td>large scroll</td>
+                            </tr>
+                            <tr>
+                                <td>h</td>
+                                <td>Home/Refresh</td>
+                            </tr>
+                            <tr>
+                                <td>f</td>
+                                <td>search page number</td>
+                            </tr>
+                            <tr>
+                                <td>&lt; and &gt;</td>
+                                <td>prev/next</td>
+                            </tr>
+                            <tr>
+                                <td>Enter or /</td>
+                                <td>focus input box(home page only)</td>
+                            </tr>
+                            <tr>
+                                <td>ctrl + s</td>
+                                <td>settings</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div id="loadingScreen">
@@ -148,10 +229,13 @@
                         tabindex="-1"
                         id="ctrl-menu-extender"
                         title="Menu"
+                        data-tooltip="Tools"
                     >
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
+                        <div class="cont">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
                     </button>
                     <div class="ctrl-menu">
                         <button
@@ -159,6 +243,7 @@
                             tabindex="-1"
                             id="ctrl-menu-plus"
                             title="Size +"
+                            data-tooltip="Size +"
                         >
                             <i class="fas fa-plus"></i>
                         </button>
@@ -167,6 +252,7 @@
                             tabindex="-1"
                             id="ctrl-menu-minus"
                             title="Size -"
+                            data-tooltip="Size -"
                         >
                             <i class="fas fa-minus"></i>
                         </button>
@@ -175,6 +261,7 @@
                             tabindex="-1"
                             id="ctrl-menu-prev"
                             title="Open Previous"
+                            data-tooltip="Open Previous"
                         >
                             <i class="fas fa-arrow-left"></i>
                         </button>
@@ -183,6 +270,7 @@
                             tabindex="-1"
                             id="ctrl-menu-next"
                             title="Open Next"
+                            data-tooltip="Open Next"
                         >
                             <i class="fas fa-arrow-right"></i>
                         </button>
@@ -191,6 +279,7 @@
                             tabindex="-1"
                             id="ctrl-menu-bookmark"
                             title="Bookmark"
+                            data-tooltip="Bookmark"
                         >
                             <i class="far fa-bookmark"></i>
                         </button>
@@ -199,6 +288,7 @@
                             tabindex="-1"
                             id="ctrl-menu-page"
                             title="Navigate To Page"
+                            data-tooltip="Navigate To Page"
                             onClick="$('#pageNumbers #NavigateToPageInput').focus()"
                         >
                             <i class="far fa-file-alt"></i>
@@ -206,14 +296,26 @@
                     </div>
                 </div>
                 <div class="currentMangaList">
-                    <input
-                        type="text"
-                        name=""
-                        id="locationInput2"
-                        placeholder="Type to Search(Chapter Number)"
-                        tabindex="-1"
-                        title="Type to Search"
-                    />
+                    <div class="tool">
+                        <input
+                            type="text"
+                            name=""
+                            id="locationInput2"
+                            spellcheck="false"
+                            placeholder="Type to Search(Chapter Number)"
+                            tabindex="-1"
+                            title="Type to Search"
+                        />
+
+                        <button
+                            id="inverseSort2"
+                            tabindex="-1"
+                            data-value="normal"
+                            data-tooltip="Sort"
+                        >
+                            <i class="fas fa-sort"></i>
+                        </button>
+                    </div>
                     <h1>
                         Manga: <span class="mangaName"></span><br />
                         Chapter: <span class="chapterName"></span>

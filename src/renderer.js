@@ -7,7 +7,7 @@ const inputForm = document.querySelector("#locationInput");
 (function consolelogintro() {
     console.log("Manga Reader Version : " + require("@electron/remote").app.getVersion());
     console.log(`
-If you encounter any problem post at https://github.com/SukoonT/offline-manga-reader/issues
+If you encounter any problem post at https://github.com/mienaiyami/offline-manga-reader/issues
 
 keyboard shortcuts:-
 
@@ -56,10 +56,6 @@ ipcRenderer.on("isRestored", () => {
 let readerWidth = parseFloat(localStorage.getItem("readerWidth")) || 50;
 //get manga path sync
 handleContextMenu();
-//set default location button
-document.querySelector("#setDefault").addEventListener("click", () => {
-    promptSetDefaultLocation();
-});
 //prompt to set default location
 //historylist
 let historyLimit = parseInt(localStorage.getItem("historyLimit")) || 60;
@@ -90,6 +86,48 @@ $(".nonFocusable").on("focus", (e) => {
     e.preventDefault();
     e.currentTarget.blur();
 });
+const checkSupportedExt = (ext) => {
+    let supportedExt = [".jpg", ".jpeg", ".png", ".gif", ".webg"];
+    return supportedExt.includes(ext);
+};
+//list sorting type ;
+let locationListSortType = localStorage.getItem("locationListSortType") ||
+    "normal";
+const displayList = (type, Linklist, parent) => {
+    let suggestionsText = "";
+    let historyPathsLinks = historyPaths.map((e) => e.link);
+    let list = [...Linklist];
+    if (locationListSortType === "inverted") {
+        list = list.reverse();
+    }
+    localStorage.setItem("locationListSortType", locationListSortType);
+    list.forEach((e) => {
+        let alreadyRead = false;
+        if (historyPathsLinks.includes(path.normalize(e))) {
+            alreadyRead = true;
+        }
+        let name = e.split("\\").filter((f) => f !== "");
+        if (type === 0) {
+            suggestionsText += locationListItem(name[name.length - 1] || "none", e, alreadyRead);
+        }
+        if (type === 1) {
+            let imgLength = fs
+                .readdirSync(path.normalize(e + "\\"), "utf8")
+                .filter((i) => {
+                if (checkSupportedExt(path.extname(i)))
+                    return i;
+            });
+            let imgItem = {
+                mangaName: name[name.length - 2] || "none",
+                chapterName: name[name.length - 1] || "none",
+                link: path.normalize(e + "\\"),
+                pages: imgLength.length,
+            };
+            suggestionsText += readerListItem(imgItem, alreadyRead);
+        }
+    });
+    parent.innerHTML = `<ol>${suggestionsText}</ol>`;
+};
 const getNextList = (link) => {
     link = path.normalize(link);
     if (path.extname(link) === "" ||
@@ -115,19 +153,16 @@ const getNextList = (link) => {
             data = data.sort((a, b) => {
                 let num1 = filterOutNumber(a);
                 let num2 = filterOutNumber(b);
-                return parseFloat(num2) - parseFloat(num1);
+                return parseFloat(num1) - parseFloat(num2);
             });
-            let historyPathsLinks = historyPaths.map((e) => e.link);
             currentList = [];
             data.forEach((e) => {
-                let alreadyRead = false;
                 currentList.push(path.normalize(path.join(link, e, "\\")));
-                if (historyPathsLinks.includes(path.normalize(link + e + "/"))) {
-                    alreadyRead = true;
-                }
-                suggestionsText += locationListItem(e, link, alreadyRead);
             });
-            document.querySelector("#locationsTab > div.location-cont").innerHTML = `<ol>${suggestionsText}</ol>`;
+            displayList(0, currentList, document.querySelector("#locationsTab > div.location-cont"));
+            // document.querySelector(
+            //     "#locationsTab > div.location-cont"
+            // ).innerHTML = `<ol>${suggestionsText}</ol>`;
         });
     }
 };
@@ -290,7 +325,7 @@ const makeImg = (link) => {
     let invalidText = "";
     let imgs = files
         .map((file) => {
-        if (supportedExt.includes(path.extname(file))) {
+        if (checkSupportedExt(path.extname(file))) {
             return {
                 name: file,
                 ext: path
@@ -374,8 +409,8 @@ const makeImg = (link) => {
                 return i;
             }
         });
-        let mangaName = name[name.length - 2];
-        let chapterName = name[name.length - 1];
+        let mangaName = name[name.length - 2] || "none";
+        let chapterName = name[name.length - 1] || "none";
         currentChapter = {
             mangaName,
             chapterName,
@@ -405,55 +440,52 @@ const makeImg = (link) => {
         $("#pageNumbers").css({ visibility: "visible" });
         // make side list
         //!removed from 400 settimeout
-        let historyPathsLinks = historyPaths.map((e) => e.link);
         $(".currentMangaList h1 .mangaName").html(currentChapter.mangaName);
         $(".currentMangaList h1 .chapterName").html(currentChapter.chapterName);
-        $(".currentMangaList .location-cont ol").html(" ");
-        currentList.forEach((e) => {
-            let alreadyRead = false;
-            if (historyPathsLinks.includes(path.normalize(e + "\\"))) {
-                alreadyRead = true;
-            }
-            let imgLength = fs
-                .readdirSync(path.normalize(e + "\\"), "utf8")
-                .filter((i) => {
-                if (supportedExt.includes(path.extname(i)))
-                    return i;
-            });
-            let chapterName = e.split("\\").filter((i) => i !== "");
-            let imgItem = {
-                mangaName: mangaName,
-                chapterName: chapterName[chapterName.length - 1],
-                link: path.normalize(e + "\\"),
-                pages: imgLength.length,
-            };
-            $(".currentMangaList .location-cont ol").append(readerListItem(imgItem, alreadyRead));
-        });
+        displayList(1, currentList, document.querySelector(".currentMangaList .location-cont"));
         isCurrentMangaList = true;
         // }
-        prevLink = $(".currentMangaList .location-cont ol li a[data-link='" +
-            currentChapter.link
-                .replace(/\\/g, "\\\\")
-                .replace(/\'/g, "\\'") +
-            "']")
-            .parent()
-            .next()
-            .find("a")
-            .attr("data-link");
-        nextLink = $(".currentMangaList .location-cont ol li a[data-link='" +
-            currentChapter.link
-                .replace(/\\/g, "\\\\")
-                .replace(/\'/g, "\\'") +
-            "']")
-            .parent()
-            .prev()
-            .find("a")
-            .attr("data-link");
-        // setTimeout(() => {
-        // $("#loadingScreen ").hide();
-        // }, 400);
+        prevLink =
+            currentList[currentList.findIndex((e) => e === currentChapter.link) - 1];
+        nextLink =
+            currentList[currentList.findIndex((e) => e === currentChapter.link) + 1];
     }, 100);
 };
+//inverse list
+$("#inverseSort").on("click", (e) => {
+    let parent = (document.querySelector("#locationsTab > div.location-cont"));
+    if (locationListSortType === "normal") {
+        locationListSortType = "inverted";
+        let invertedList = [];
+        for (let i = currentList.length - 1; i >= 0; i--) {
+            invertedList.push(currentList[i]);
+        }
+        displayList(0, currentList, parent);
+        return;
+    }
+    if (locationListSortType === "inverted") {
+        locationListSortType = "normal";
+        displayList(0, currentList, parent);
+        return;
+    }
+});
+$("#inverseSort2").on("click", (e) => {
+    let parent = (document.querySelector("#reader > div.currentMangaList > div.location-cont"));
+    if (locationListSortType === "normal") {
+        locationListSortType = "inverted";
+        let invertedList = [];
+        for (let i = currentList.length - 1; i >= 0; i--) {
+            invertedList.push(currentList[i]);
+        }
+        displayList(1, currentList, parent);
+        return;
+    }
+    if (locationListSortType === "inverted") {
+        locationListSortType = "normal";
+        displayList(1, currentList, parent);
+        return;
+    }
+});
 //shorten name when window small
 $(window).on("resize", () => {
     setTitleSize();
@@ -464,11 +496,6 @@ $(window).on("resize", () => {
     //page number
     currentPage = parseInt($(document.elementFromPoint(window.innerWidth / 2, window.innerHeight / 3)).attr("data-pagenum"));
 });
-// //go back btn
-// !removed
-// $("#goback").click(() => {
-//     addToLocationList(mangaPath);
-// });
 $("#ctrl-menu-bookmark").on("click", () => {
     addToBookmarksList(currentChapter.link);
 });
@@ -656,11 +683,216 @@ const clearHistory = () => {
         $("#historyTab .location-cont").html(`<p>No items</p>`);
     }
 };
+// settings;
+(function () {
+    let setDefaultOption = `
+    <div class="settingItem defaultLocation">
+        <div class="name">Default Location:</div>
+        <div class="current">
+            <input type="text" value="${mangaPath}" disabled>
+            <button onClick="{
+                promptSetDefaultLocation()
+                location.reload();
+                $(this).html('Done')
+                $(this).prop('disabled',true)
+                setTimeout(()=>{
+                    $(this).html('Change Default')
+                    $(this).removeAttr('disabled')
+                },3000)
+            }">
+            Change Default
+            </button>
+        </div>
+    </div>`;
+    let setHistoryLimit = `
+    <div class="settingItem historyLimit">
+        <div class="name">History Limit:</div>
+        <div class="current">
+            <input type="number" value="${localStorage.getItem("historyLimit") || 60}" onkeydown="
+            {
+                if(event.key==='Enter'){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    $(this).siblings('button').trigger('click')
+                }
+            }
+            " disabled>
+            <button data-type="enable" onClick="{
+                if($(this).attr('data-type')==='enable'){
+                    $(this).attr('data-type','set')
+                    $(this).addClass('enabled');
+                    $(this).html('Set New')
+                    $(this).siblings('input').removeAttr('disabled');
+                    $(this).siblings('input').trigger('focus').trigger('select')
+                    return;
+                }if($(this).attr('data-type')==='set'){
+                    $(this).attr('data-type','enable')
+                    $(this).removeClass('enabled');
+                    $(this).html('Done')
+                    $(this).prop('disabled',true)
+                    setTimeout(()=>{
+                        $(this).html('Change Default')
+                        $(this).removeAttr('disabled')
+                    },3000)
+                    $(this).siblings('input').prop('disabled',true)
+                    localStorage.setItem('historyLimit',$(this).siblings('input').val())
+                    historyLimit = $(this).siblings('input').val()
+                    return;
+                }
+            }">
+            Change Default
+            </button>
+        </div>
+    </div>`;
+    let exportBookmark = `
+    <div class="settingItem exportBookmark">
+        <div class="name">Bookmarks:</div>
+        <div class="current">
+            <button onClick="{
+                let btn = $(this);
+                let opt = dialog.showSaveDialogSync({title:'Export Bookmarks',
+                filters: [
+                  { name: 'Json', extensions: ['json'] }
+                ]})
+                if(opt==undefined) return;
+                fs.writeFileSync(opt,localStorage.getItem('bookmarkPaths')||JSON.stringify([]))
+                btn.html('Done')
+                btn.prop('disabled',true)
+                setTimeout(()=>{
+                    btn.html('Export')
+                    btn.removeAttr('disabled')
+                },3000)
+            }">
+            Export
+            </button>
+            <button onClick="{
+                let btn = $(this);
+                let opt = dialog.showOpenDialogSync({
+                    properties: ['openFile'],
+                    filters: [
+                      { name: 'Json', extensions: ['json'] }
+                ]})
+                if(opt==undefined) return;
+                let data = JSON.parse(fs.readFileSync(opt[0]))
+                let dataToAdd = [];
+                let similarFound = 0;
+                data.forEach((item) => {
+                    if (!bookmarkPaths.map((e) => e.link).includes(item.link)) {
+                        dataToAdd.push(item);
+                    } else{
+                        similarFound++;
+                    }
+                })
+                if(similarFound>0) dialog.showMessageBoxSync({
+                    type: 'warning',
+                    message: 'Found '+ similarFound+ ' similar',
+                    buttons: ['Ok'],
+                });
+                bookmarkPaths.push(...dataToAdd)
+                let abc = ''
+                dataToAdd.forEach((item) =>{
+                    abc +=bookmarkListItem(item)
+                })
+                if($('#bookmarksTab .location-cont ol').length===0){
+                    $('#bookmarksTab .location-cont').html('<ol></ol>')
+                }
+                $('#bookmarksTab .location-cont ol').prepend(abc);
+                localStorage.setItem('bookmarkPaths', JSON.stringify(bookmarkPaths));
+                btn.html('Done')
+                btn.prop('disabled',true)
+                setTimeout(()=>{
+                    btn.html('Import')
+                    btn.removeAttr('disabled')
+                },3000)
+            }">
+            Import
+            </button>
+            <button onClick="
+            {
+                let btn = $(this);
+                let confirm1 = dialog.showMessageBoxSync({
+                    type: 'warning',
+                    title:'Delete BookMarks',
+                    message: 'are you sure you want to remove bookmark?',
+                    buttons: ['yes', 'no'],
+                });
+                if(confirm1==undefined) return;
+                if(confirm1===1) return;
+                if(confirm1===0){
+                    let confirm2 = dialog.showMessageBoxSync({
+                        type: 'warning',
+                        title:'Delete BookMarks',
+                        message: 'are you really sure you want to remove bookmark?\\nThis process is irreversible.',
+                        buttons: ['yes', 'no'],
+                    });
+                    if(confirm2===1) return;
+                }
+                bookmarkPaths =[];
+                $('#bookmarksTab .location-cont').html('<p>No items</p>');
+                localStorage.setItem('bookmarkPaths', JSON.stringify(bookmarkPaths));
+                btn.html('Done')
+                btn.prop('disabled',true)
+                setTimeout(()=>{
+                    btn.html('Delete All Bookmarks')
+                    btn.removeAttr('disabled')
+                },3000)
+            }">
+            Delete All Bookmarks
+            </button>
+        </div>
+    </div>`;
+    let themeOption = `
+    <div class="settingItem historyLimit">
+        <div class="name">Theme:</div>
+        <div class="current">
+            Coming Soon
+        </div>
+    </div>
+    `;
+    document.querySelector("#settings div.cont .content").innerHTML +=
+        setDefaultOption + setHistoryLimit + exportBookmark + themeOption;
+})();
+//close settings
+const toggleSettings = () => {
+    let settings = $("#settings");
+    if (settings.attr("data-state") === "closed") {
+        settings.attr("data-state", "open");
+        return;
+    }
+    if (settings.attr("data-state") === "open") {
+        settings.attr("data-state", "closed");
+        return;
+    }
+};
+$("#settings > div.clickClose").on("click", () => {
+    $("#settings").attr("data-state", "closed");
+});
 // keyboard shortcuts
+// change size on control / ctrl + scroll
+$(document).on("wheel", (e) => {
+    if (readerOpen && e.ctrlKey) {
+        if (Math.sign(e.originalEvent.deltaY) === 1) {
+            decImgSize();
+        }
+        if (Math.sign(e.originalEvent.deltaY) === -1) {
+            incImgSize();
+        }
+    }
+});
 $(document).on("keydown", (e) => {
     if (e.key === "Enter" || e.key === "/") {
         e.preventDefault();
         inputForm.focus();
+    }
+    if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        $("#topBar > div.titleBar > button.settingsBtn").trigger("click");
+        return;
+    }
+    if (e.key === "h") {
+        //refresh / home
+        e.preventDefault();
+        location.reload();
     }
     if (readerOpen && document.activeElement.tagName === "BODY") {
         if (e.key === "f") {
@@ -676,11 +908,6 @@ $(document).on("keydown", (e) => {
             //<
             e.preventDefault();
             openPrevChapter();
-        }
-        if (e.key === "h") {
-            //refresh / home
-            e.preventDefault();
-            location.reload();
         }
         if (e.key === "b") {
             //bookmark

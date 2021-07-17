@@ -56,24 +56,27 @@ const createWindow = () => {
     });
 };
 async function checkforupdate() {
-    let rawdata = await fetch("https://raw.githubusercontent.com/SukoonT/manga-reader/main/package.json").then((data) => data.json());
+    let rawdata = await fetch("https://raw.githubusercontent.com/mienaiyami/offline-manga-reader/main/package.json").then((data) => data.json());
     let latestVersion = await rawdata.version.split(".");
     let currentAppVersion = app.getVersion().split(".");
     if (latestVersion[0] > currentAppVersion[0] ||
         (latestVersion[0] === currentAppVersion[0] &&
-            latestVersion[1] > currentAppVersion[1])) {
+            latestVersion[1] > currentAppVersion[1]) ||
+        (latestVersion[0] === currentAppVersion[0] &&
+            latestVersion[1] === currentAppVersion[1] &&
+            latestVersion[2] > currentAppVersion[2])) {
         dialog
             .showMessageBox(new BrowserWindow({
             show: false,
             alwaysOnTop: true,
         }), {
             title: "New Version Available",
-            message: "New Version Available.\nGo to github?",
+            message: "New Version Available.\nGo to download page?",
             buttons: ["Yes", "No"],
         })
             .then((response) => {
             if (response.response === 0) {
-                shell.openExternal("https://github.com/SukoonT/manga-reader");
+                shell.openExternal("https://mienaiyami.github.io/mangareader/");
             }
         });
         return;
@@ -85,7 +88,7 @@ app.on("ready", () => {
         createWindow();
     }, 2000);
     globalShortcut.register("f1", () => {
-        shell.openExternal("https://github.com/SukoonT/manga-reader");
+        shell.openExternal("https://github.com/mienaiyami/offline-manga-reader");
     });
     const template = [
         {

@@ -13,16 +13,13 @@ interface ListItem {
 
 function locationListItem(e: string, link: string, alreadyRead: boolean) {
     let displayname = e;
-    link = link + "\\";
-    link = path.normalize(link);
+    link = path.normalize(link + "\\");
     let listClass = "";
     if (alreadyRead) {
         listClass = "already-read";
     }
     let btn = `<button title="Open In Reader" class="open-in-reader-btn" onclick="makeImg($(this).siblings('a').attr('data-link'))"><i class="fas fa-angle-right" style="cursor: pointer;"></i></button>`;
-    let listItem = `<li class="${listClass}"><a class="a-context" onclick="getNextList($(this).attr('data-link'))" data-name="${e}" data-link="${path.normalize(
-        link + "\\" + e + "\\"
-    )}">${displayname}</a>${btn}</li>`;
+    let listItem = `<li class="${listClass}"><a class="a-context" onclick="getNextList($(this).attr('data-link'))" data-name="${e}" data-link="${link}">${displayname}</a>${btn}</li>`;
     return listItem;
 }
 
@@ -32,11 +29,17 @@ function historyListItem(e: ListItem) {
     let date = e.date;
     let pages = e.pages;
     let link = e.link;
+    let displayName =
+        (mangaName.length < 20
+            ? mangaName
+            : mangaName.substring(0, 20) + "...") +
+        " / " +
+        (chapterName.length < 20
+            ? chapterName
+            : chapterName.substring(0, 20) + "...");
     link = link + "\\";
     link = path.normalize(link);
-    let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}"data-link="${link}" onmouseover="fileInfoOnHover($(this))">${
-        mangaName + " / " + chapterName
-    }</a></li>`;
+    let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}"data-link="${link}" onmouseover="fileInfoOnHover($(this))">${displayName}</a></li>`;
     return listItem;
 }
 function bookmarkListItem(e: ListItem) {
@@ -45,11 +48,17 @@ function bookmarkListItem(e: ListItem) {
     let date = e.date;
     let pages = e.pages;
     let link = e.link;
+    let displayName =
+        (mangaName.length < 20
+            ? mangaName
+            : mangaName.substring(0, 20) + "...") +
+        " / " +
+        (chapterName.length < 20
+            ? chapterName
+            : chapterName.substring(0, 20) + "...");
     link = link + "\\";
     link = path.normalize(link);
-    let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}" data-link="${link}" onmouseover="fileInfoOnHover($(this))">${
-        mangaName + " / " + chapterName
-    }</a></li>`;
+    let listItem = `<li><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="${date}" data-link="${link}" onmouseover="fileInfoOnHover($(this))">${displayName}</a></li>`;
     return listItem;
 }
 function readerListItem(e: ListItem, alreadyRead: boolean) {
@@ -63,19 +72,19 @@ function readerListItem(e: ListItem, alreadyRead: boolean) {
     if (alreadyRead) {
         listClass = "already-read";
     }
-    let listItem = `<li class="${listClass}"><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="" data-link="${link}" onmouseover="fileInfoOnHover($(this))">${chapterName}</a></li>`;
+    let listItem = `<li class="${listClass}"><a class="a-context" onclick="makeImg($(this).attr('data-link'))" data-mangaName="${mangaName}" data-chapterName="${chapterName}" data-pages="${pages}" data-date="" data-link="${link}">${chapterName}<span class="pageNum" title="Total Pages">${pages}</span></a></li>`;
     return listItem;
 }
 
 function fileInfoOnHover(item: JQuery) {
     let manga = item.attr("data-mangaName");
-    if (manga.length > 60) {
-        manga = manga.substring(0, 60) + "...";
-    }
+    // if (manga.length > 60) {
+    //     manga = manga.substring(0, 60) + "...";
+    // }
     let chapter = item.attr("data-chapterName");
-    if (chapter.length > 60) {
-        chapter = chapter.substring(0, 60) + "...";
-    }
+    // if (chapter.length > 60) {
+    //     chapter = chapter.substring(0, 60) + "...";
+    // }
     let pages = item.attr("data-pages");
     let date = item.attr("data-date") || "";
 
@@ -105,36 +114,26 @@ function fileInfoOnHover(item: JQuery) {
     $("#fileInfo").html(mangacont + chaptercont + pagescont + datecont);
 
     let x = item.offset().left;
-    let y = item.offset().top;
-    item.on("mousemove", (e) => {
-        x = e.clientX + 20;
+    let y =
+        item.offset().top -
+        parseFloat($(document.body).css("--titleBar-height"));
+    if (
+        y +
+            $("#fileInfo").height() +
+            parseFloat($(document.body).css("--titleBar-height")) +
+            20 >=
+        $(window).height()
+    ) {
         y =
-            e.clientY +
-            20 -
-            parseFloat($(document.body).css("--titleBar-height"));
-        if (x > $(window).width() - $("#fileInfo").width() - 50) {
-            x = $(window).width() - $("#fileInfo").width() - 50;
-        }
-        if (
-            y >
             $(window).height() -
-                $("#fileInfo").height() -
-                50 -
-                parseFloat($(document.body).css("--titleBar-height"))
-        ) {
-            y =
-                y -
-                $("#fileInfo").height() -
-                20 -
-                parseFloat($(document.body).css("--titleBar-height"));
-        }
-        $("#fileInfo").css({ left: x, top: y });
-    });
-    $("#fileInfo").css({ display: "flex" });
+            $("#fileInfo").height() -
+            parseFloat($(document.body).css("--titleBar-height")) -
+            20;
+    }
+    $("#fileInfo").css({ left: x, top: y, visibility: "visible" });
     item.on("mouseout", () => {
         $("#fileInfo").html("");
-
-        $("#fileInfo").hide();
+        $("#fileInfo").css("visibility", "hidden"); //.hide();
     });
 }
 //contextmenu
@@ -151,12 +150,13 @@ function handleContextMenu() {
             let hRemovebtn = `<li class="contextMenuOption" onclick="{removeHistory(contextTarget)}" id="contextMenu-remove">Remove</li>`;
             let openbtn = `<li class="contextMenuOption" onclick="makeImg(contextTarget.attr('data-link'))" id="contextMenu-open">Open</li>`;
             let copylocationbtn = `<li class="contextMenuOption" onclick="clipboard.writeText(contextTarget.attr('data-link'))" id="contextMenu-copy" >Copy Location</li>`;
-            let menu = `<ul>${openbtn} ${bookmarkbtn}  ${copylocationbtn}</ul>`;
+            let openInExplorer = `<li class="contextMenuOption" onclick="shell.openPath(contextTarget.attr('data-link'))" id="contextMenu-external" >Open in File Explorer</li>`;
+            let menu = `<ul>${openbtn} ${bookmarkbtn}  ${copylocationbtn} ${openInExplorer}</ul>`;
             if ($(e.target).parents("#bookmarksTab").length === 1) {
-                menu = `<ul>${openbtn} ${bkRemovebtn}  ${copylocationbtn}</ul>`;
+                menu = `<ul>${openbtn} ${bkRemovebtn}  ${copylocationbtn} ${openInExplorer}</ul>`;
             }
             if ($(e.target).parents("#historyTab").length === 1) {
-                menu = `<ul>${openbtn}  ${bookmarkbtn} ${hRemovebtn}  ${copylocationbtn}</ul>`;
+                menu = `<ul>${openbtn}  ${bookmarkbtn} ${hRemovebtn}  ${copylocationbtn}${openInExplorer}</ul>`;
             }
             contextMenu.html(menu);
             contextMenu.find("li").on("contextmenu", (e) => {

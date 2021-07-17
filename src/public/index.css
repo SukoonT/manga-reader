@@ -4,6 +4,32 @@
   src: url("./font/RobotoCondensed-Regular.ttf");
 }
 
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  cursor: inherit;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+:root {
+  --color-primary: #272727;
+  --color-secondary: #8f8f8f;
+  --color-tertiary: #1f1f1f;
+  --topBar-color: #1f1f1f;
+  --topBar-hover-color: #ffffff30;
+  --input-bg: #ffffff10;
+  --btn-color1: #353535;
+  --btn-color2: #6b6b6b;
+  --listItem-bg-color: #00000000;
+  --listItem-hover-color: #ffffff40;
+  --listItem-alreadyRead-color: #4a4d5b;
+  --toolbar-btn-bg: #1f1f1f;
+  --toolbar-btn-hover: #6b6b6b;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -21,28 +47,54 @@
   background: #555;
 }
 
-*,
-*::after,
-*::before {
-  padding: 0;
-  margin: 0;
-  cursor: default;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
 body {
   font-family: "Roboto";
   width: 100vw;
   height: 100vh;
   color: #ffffff;
-  background: #272727;
+  background: var(--color-primary);
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  overflow-x: hidden;
   --titleBar-height: 40px;
   --button-width: 55px;
+}
+
+body [data-tooltip] {
+  position: relative;
+}
+
+body [data-tooltip]::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  --translate: 10px, -50%;
+  cursor: inherit;
+  --rotate: 0;
+  z-index: 10000;
+  font-size: 18px;
+  display: block;
+  white-space: nowrap;
+  color: #fff;
+  visibility: none;
+  background: #000;
+  left: 100%;
+  top: 50%;
+  -webkit-transform: translate(var(--translate)) scale(0) rotate(var(--rotate));
+          transform: translate(var(--translate)) scale(0) rotate(var(--rotate));
+  padding: 3px 5px;
+  -webkit-transition: 0.1s -webkit-transform;
+  transition: 0.1s -webkit-transform;
+  transition: 0.1s transform;
+  transition: 0.1s transform, 0.1s -webkit-transform;
+  border-radius: 5px;
+}
+
+body [data-tooltip]:hover::before {
+  visibility: visible;
+  -webkit-transform: translate(var(--translate)) scale(1) rotate(var(--rotate));
+          transform: translate(var(--translate)) scale(1) rotate(var(--rotate));
 }
 
 body #topBar {
@@ -58,7 +110,7 @@ body #topBar {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  background: #1f1f1f;
+  background: var(--topBar-color);
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -68,6 +120,7 @@ body #topBar {
 }
 
 body #topBar .titleBar {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -76,13 +129,14 @@ body #topBar .titleBar {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  overflow: hidden;
 }
 
 body #topBar .titleBar button {
   width: var(--button-width);
   background: none;
   position: relative;
+  font-family: "Roboto";
+  color: #ffffff;
   height: 100%;
   left: 0;
   top: 0;
@@ -92,8 +146,15 @@ body #topBar .titleBar button {
   -webkit-app-region: no-drag;
 }
 
+body #topBar .titleBar button::before {
+  top: 100%;
+  left: 50%;
+  --translate: -50%, 10px;
+}
+
 body #topBar .titleBar button i::before {
   cursor: pointer;
+  z-index: 1;
 }
 
 body #topBar .titleBar button i {
@@ -102,7 +163,7 @@ body #topBar .titleBar button i {
 }
 
 body #topBar .titleBar button:hover {
-  background: #ffffff30;
+  background: var(--topBar-hover-color);
 }
 
 body #topBar .titleBar .githubbtn {
@@ -161,6 +222,12 @@ body #topBar .titleBarBtns #pageNumbers {
   width: calc(var(--button-width) * 2);
 }
 
+body #topBar .titleBarBtns #pageNumbers::before {
+  top: 100%;
+  left: 50%;
+  --translate: -50%, 10px;
+}
+
 body #topBar .titleBarBtns #pageNumbers .totalPage {
   display: block;
   font-size: 25px;
@@ -175,7 +242,7 @@ body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput {
           box-sizing: border-box;
   font-family: Roboto;
   cursor: text;
-  background: #ffffff10;
+  background: var(--input-bg);
   border: none;
   height: 100%;
   box-sizing: border-box;
@@ -188,7 +255,7 @@ body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput::-webkit-outer-spin
 }
 
 body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput:focus, body #topBar .titleBarBtns #pageNumbers #NavigateToPageInput:active {
-  background: #ffffff30;
+  background: var(--topBar-hover-color);
   outline: none;
 }
 
@@ -207,7 +274,7 @@ body #topBar .titleBarBtns button:focus {
 }
 
 body #topBar .titleBarBtns button:hover {
-  background: #ffffff30;
+  background: var(--topBar-hover-color);
 }
 
 body #topBar .titleBarBtns button i {
@@ -225,6 +292,35 @@ body #app {
   left: 0;
   width: 100%;
   height: calc(100% - var(--titleBar-height));
+}
+
+body #app button {
+  background: var(--btn-color1);
+  color: #ffffff;
+  font-family: "roboto";
+  font-size: 20px;
+  font-weight: 200;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 3px;
+  border: none;
+}
+
+body #app button:hover {
+  background: var(--btn-color2);
+  outline: none;
+}
+
+body #app button:focus {
+  outline: none;
+}
+
+body #app button i::before {
+  cursor: pointer;
+}
+
+body #app input:focus {
+  outline: 1px solid var(--color-secondary);
 }
 
 body #app #landingPage {
@@ -285,8 +381,6 @@ body #app #landingPage .navCont {
   position: relative;
   width: 100%;
   height: 100%;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
 }
 
 body #app #landingPage .navCont .contTab {
@@ -297,41 +391,17 @@ body #app #landingPage .navCont .contTab {
   display: -ms-flexbox;
   display: flex;
   padding: 20px 20px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
 }
 
-body #app #landingPage .navCont .contTab button {
-  background: #353535;
-  color: #ffffff;
-  font-family: "roboto";
-  font-size: 20px;
-  font-weight: 200;
-  cursor: pointer;
-  padding: 10px 20px;
-  margin-bottom: 5px;
-  border-radius: 3px;
-  border: none;
-}
-
-body #app #landingPage .navCont .contTab button:hover {
-  background: #6b6b6b;
-  outline: none;
-}
-
-body #app #landingPage .navCont .contTab button i::before {
-  cursor: pointer;
-}
-
 body #app #landingPage .navCont .contTab h2 {
   margin-bottom: 10px;
   text-align: center;
   padding-bottom: 10px;
-  border-bottom: 1px solid #8f8f8f;
+  border-bottom: 1px solid var(--color-secondary);
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
@@ -343,17 +413,21 @@ body #app #landingPage .navCont .contTab h2 button {
 
 body #app #landingPage .navCont .contTab .location-cont {
   padding: 10px 10px;
+  position: relative;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   height: 100%;
   overflow-y: scroll;
+  overflow-x: visible;
 }
 
 body #app #landingPage .navCont .contTab .location-cont ol {
+  position: relative;
   counter-reset: countList;
 }
 
 body #app #landingPage .navCont .contTab .location-cont ol li {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -362,12 +436,13 @@ body #app #landingPage .navCont .contTab .location-cont ol li {
       -ms-flex-align: center;
           align-items: center;
   border-radius: 2px;
-  border-bottom: 1px solid #6e6e6e;
+  background: var(--listItem-bg-color);
+  border-bottom: 1px solid var(--color-secondary);
   height: 100%;
 }
 
 body #app #landingPage .navCont .contTab .location-cont ol li:hover {
-  background-color: #ffffff4d;
+  background-color: var(--listItem-hover-color);
 }
 
 body #app #landingPage .navCont .contTab .location-cont ol li a {
@@ -407,16 +482,32 @@ body #app #landingPage .navCont .contTab .location-cont ol li button:hover {
 
 body #app #landingPage .navCont .divider {
   width: 20px;
-  cursor: w-resize;
   height: 100%;
   background-color: #8f8f8f2d;
 }
 
-body #app #landingPage .navCont #locationsTab input {
+body #app #landingPage .navCont #locationsTab .tool {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  gap: 5px;
+}
+
+body #app #landingPage .navCont #locationsTab .tool #inverseSort {
+  padding: 0;
+  width: 50px;
+  height: 100%;
+}
+
+body #app #landingPage .navCont #locationsTab .tool input {
   font-size: 20px;
   padding: 10px;
   overflow: scroll;
-  width: auto;
+  width: 100%;
   cursor: text;
   background: #ffffff10;
   color: #ffffff;
@@ -426,20 +517,16 @@ body #app #landingPage .navCont #locationsTab input {
   border: none;
 }
 
-body #app #landingPage .navCont #locationsTab input:focus {
-  outline: none;
-}
-
 body #app #landingPage .navCont #locationsTab .location-cont ol li a {
   cursor: default;
 }
 
 body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-reader-btn {
-  background: #353535;
+  background: var(--btn-color1);
 }
 
 body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-reader-btn:hover {
-  background: #6b6b6b;
+  background: var(--btn-color2);
 }
 
 body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-reader-btn:hover::before {
@@ -447,11 +534,11 @@ body #app #landingPage .navCont #locationsTab .location-cont ol li .open-in-read
 }
 
 body #app #landingPage .navCont #locationsTab .location-cont ol .already-read {
-  background: #4a4d5b;
+  background: var(--listItem-alreadyRead-color);
 }
 
 body #app #landingPage .navCont #locationsTab .location-cont ol .already-read:hover {
-  background-color: #ffffff4d;
+  background-color: var(--listItem-hover-color);
 }
 
 body #app #contextMenu {
@@ -482,7 +569,7 @@ body #app #contextMenu ul li {
 }
 
 body #app #contextMenu ul li:hover {
-  background: #292929;
+  background: var(--btn-color1);
 }
 
 body #app #fileInfo {
@@ -495,10 +582,15 @@ body #app #fileInfo {
   padding: 10px 10px;
   border-radius: 5px;
   max-width: 300px;
-  -webkit-transition: 0.5s width;
-  transition: 0.5s width;
+  -webkit-transform: translate(-100%, 0);
+          transform: translate(-100%, 0);
+  -webkit-transition: 0.1s top, 0.5s width;
+  transition: 0.1s top, 0.5s width;
   z-index: 1000;
-  display: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  visibility: hidden;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
@@ -517,12 +609,159 @@ body #app #fileInfo .info-cont .info {
   word-wrap: none;
 }
 
+body #app #settings {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  display: -ms-grid;
+  display: grid;
+  background: #0004;
+  place-items: center;
+  -webkit-transition: 0.3s all;
+  transition: 0.3s all;
+}
+
+body #app #settings[data-state="open"] {
+  visibility: visible;
+}
+
+body #app #settings[data-state="open"] .cont {
+  -webkit-transform: scale(1);
+          transform: scale(1);
+}
+
+body #app #settings[data-state="closed"] {
+  visibility: hidden;
+}
+
+body #app #settings[data-state="closed"] .cont {
+  -webkit-transform: scale(0);
+          transform: scale(0);
+}
+
+body #app #settings .clickClose {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+body #app #settings .cont {
+  position: relative;
+  background: var(--color-primary);
+  border-radius: 10px;
+  -webkit-transition: 0.2s all;
+  transition: 0.2s all;
+  width: calc(max(700px, 70%));
+  height: 90%;
+  -webkit-transform: scale(0);
+          transform: scale(0);
+  -webkit-box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 19px 25px;
+          box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 19px 25px;
+  overflow: hidden scroll;
+}
+
+body #app #settings .cont > h1 {
+  border-bottom: 1px solid var(--color-secondary);
+  padding: 10px;
+}
+
+body #app #settings .cont .content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  padding: 20px;
+  font-size: 1.4em;
+  gap: 10px;
+}
+
+body #app #settings .cont .content .settingItem {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 30% 70%;
+      grid-template-columns: 30% 70%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+body #app #settings .cont .content .settingItem .name {
+  width: 100%;
+}
+
+body #app #settings .cont .content .settingItem .current {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+  -webkit-box-pack: stretch;
+      -ms-flex-pack: stretch;
+          justify-content: stretch;
+}
+
+body #app #settings .cont .content .settingItem .current input {
+  background-color: var(--input-bg);
+  border: none;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  font-size: 15px;
+  color: #fff;
+  padding: 5px;
+  height: 100%;
+  border-radius: 3px;
+}
+
+body #app #settings .cont .content .settingItem .current button {
+  height: 100%;
+}
+
+body #app #settings .cont .content .settingItem .current .enabled {
+  background-color: #f003;
+}
+
+body #app #settings .cont .shortcutKey {
+  padding: 20px;
+  display: -ms-grid;
+  display: grid;
+  place-items: center;
+}
+
+body #app #settings .cont .shortcutKey table {
+  border-spacing: 0;
+  width: 100%;
+}
+
+body #app #settings .cont .shortcutKey table th,
+body #app #settings .cont .shortcutKey table td {
+  width: 50%;
+  padding: 10px 10px;
+}
+
+body #app #settings .cont .shortcutKey table tr {
+  border: 1px solid var(--color-secondary);
+}
+
+body #app #settings .cont .shortcutKey table tr td:first-child {
+  text-align: end;
+}
+
 body #app #loadingScreen {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 1000;
-  background: #1f1f1f;
+  background: var(--color-tertiary);
   display: -ms-grid;
   display: grid;
   place-content: center;
@@ -547,7 +786,7 @@ body #app #loadingScreen .loadingBarCont .loadingbar {
   width: 0;
   height: 100%;
   /* border-radius: 5px; */
-  background-color: #7b7b7b;
+  background-color: var(--color-secondary);
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -561,7 +800,7 @@ body #app #reader {
 }
 
 body #app #reader .currentMangaList {
-  background: #1f1f1f;
+  background: var(--color-tertiary);
   height: 100%;
   width: 40%;
   z-index: 100;
@@ -611,7 +850,7 @@ body #app #reader .currentMangaList::before {
           box-sizing: border-box;
   width: var(--button-width);
   height: 40px;
-  background: #1f1f1f;
+  background: var(--color-tertiary);
 }
 
 body #app #reader .currentMangaList:hover {
@@ -619,14 +858,32 @@ body #app #reader .currentMangaList:hover {
           transform: translateX(0);
 }
 
-body #app #reader .currentMangaList input {
+body #app #reader .currentMangaList .tool {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  gap: 2px;
+}
+
+body #app #reader .currentMangaList .tool #inverseSort2 {
+  padding: 0;
+  width: 50px;
+  height: 100%;
+}
+
+body #app #reader .currentMangaList .tool input {
   font-size: 20px;
-  padding: 20px 10px;
+  padding: 10px 10px;
+  height: 40px;
   margin: 0 auto;
   overflow: scroll;
-  width: 80%;
+  width: 100%;
   cursor: text;
-  background: #ffffff10;
+  background: var(--input-bg);
   color: #ffffff;
   font-family: "roboto";
   font-weight: 200;
@@ -634,13 +891,8 @@ body #app #reader .currentMangaList input {
   border: none;
 }
 
-body #app #reader .currentMangaList input:focus {
-  outline: none;
-}
-
 body #app #reader .currentMangaList h1 {
   font-size: 20px;
-  cursor: text;
   -webkit-user-select: text;
      -moz-user-select: text;
       -ms-user-select: text;
@@ -672,19 +924,31 @@ body #app #reader .currentMangaList .location-cont ol li {
       -ms-flex-align: center;
           align-items: center;
   border-radius: 2px;
-  margin-bottom: 2px;
-  border-bottom: 1px solid #6e6e6e;
+  border-bottom: 1px solid var(--color-secondary);
 }
 
 body #app #reader .currentMangaList .location-cont ol li:hover {
-  background-color: #ffffff4d;
+  background-color: var(--listItem-hover-color);
 }
 
 body #app #reader .currentMangaList .location-cont ol li a {
   cursor: pointer;
   padding: 5px 5px;
   border-radius: 2px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
   width: 100%;
+}
+
+body #app #reader .currentMangaList .location-cont ol li a .pageNum {
+  margin-left: auto;
+  min-width: 2em;
+  text-align: end;
 }
 
 body #app #reader .currentMangaList .location-cont ol li a::before {
@@ -693,29 +957,11 @@ body #app #reader .currentMangaList .location-cont ol li a::before {
 }
 
 body #app #reader .currentMangaList .location-cont ol .already-read {
-  background: #4a4d5b;
+  background: var(--listItem-alreadyRead-color);
 }
 
 body #app #reader .currentMangaList .location-cont ol .already-read:hover {
-  background-color: #ffffff4d;
-}
-
-body #app #reader::-webkit-scrollbar {
-  width: 10px;
-}
-
-body #app #reader::-webkit-scrollbar-track {
-  background: none;
-}
-
-body #app #reader::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  height: 100px;
-  background: #888;
-}
-
-body #app #reader::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background-color: var(--listItem-hover-color);
 }
 
 body #app #reader .ctrl-bar {
@@ -737,13 +983,14 @@ body #app #reader .ctrl-bar:hover {
 body #app #reader .ctrl-bar .ctrl-menu-item {
   position: relative;
   top: 0;
-  background-color: #1f1f1f;
+  background-color: var(--toolbar-btn-bg);
   color: #ffffff;
   border: none;
   width: var(--btn-size);
   height: var(--btn-size);
   padding: 10px;
   border-radius: 100%;
+  z-index: inherit;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -754,7 +1001,23 @@ body #app #reader .ctrl-bar .ctrl-menu-item {
       -ms-flex-pack: center;
           justify-content: center;
   cursor: pointer;
-  overflow: hidden;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-item::before {
+  -webkit-transform-origin: right;
+          transform-origin: right;
+  left: 0;
+  --translate: calc(-100% - 20px), -50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  opacity: 0.9;
+  font-size: 20px;
+  -webkit-filter: none;
+          filter: none;
 }
 
 body #app #reader .ctrl-bar .ctrl-menu-item i::before {
@@ -762,7 +1025,7 @@ body #app #reader .ctrl-bar .ctrl-menu-item i::before {
 }
 
 body #app #reader .ctrl-bar .ctrl-menu-item:hover {
-  background-color: #6e6e6e;
+  background-color: var(--toolbar-btn-hover);
 }
 
 body #app #reader .ctrl-bar .ctrl-menu-item i {
@@ -771,6 +1034,12 @@ body #app #reader .ctrl-bar .ctrl-menu-item i {
 }
 
 body #app #reader .ctrl-bar .ctrl-menu-extender {
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .cont {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -781,6 +1050,9 @@ body #app #reader .ctrl-bar .ctrl-menu-extender {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  cursor: pointer;
+  width: 50%;
+  height: 50%;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -792,54 +1064,58 @@ body #app #reader .ctrl-bar .ctrl-menu-extender {
   transition: 0.2s transform, 0.2s -webkit-transform;
 }
 
-body #app #reader .ctrl-bar .ctrl-menu-extender .bar {
+body #app #reader .ctrl-bar .ctrl-menu-extender .cont .bar {
   cursor: pointer;
   position: absolute;
-  width: 50%;
-  margin: 3px 0;
+  width: 100%;
   height: 3px;
   background: #fff;
   -webkit-transition: 0.4s all;
   transition: 0.4s all;
+  left: 50%;
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .cont .bar:nth-child(1) {
+  top: 0;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+}
+
+body #app #reader .ctrl-bar .ctrl-menu-extender .cont .bar:nth-child(2) {
+  top: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
 }
 
-body #app #reader .ctrl-bar .ctrl-menu-extender .bar:nth-child(1) {
-  left: 50%;
-  top: 25%;
+body #app #reader .ctrl-bar .ctrl-menu-extender .cont .bar:nth-child(3) {
+  top: 100%;
+  -webkit-transform: translate(-50%, -100%);
+          transform: translate(-50%, -100%);
 }
 
-body #app #reader .ctrl-bar .ctrl-menu-extender .bar:nth-child(2) {
-  left: 50%;
-  top: 45%;
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .cont {
+  --rotate: 45deg;
+  -webkit-transform: rotate(var(--rotate));
+          transform: rotate(var(--rotate));
 }
 
-body #app #reader .ctrl-bar .ctrl-menu-extender .bar:nth-child(3) {
-  left: 50%;
-  top: 65%;
-}
-
-body #app #reader .ctrl-bar .ctrl-menu-extender-open {
-  -webkit-transform: rotate(45deg);
-          transform: rotate(45deg);
-}
-
-body #app #reader .ctrl-bar .ctrl-menu-extender-open .bar:nth-child(1) {
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .cont .bar:nth-child(1) {
   -webkit-transform-origin: middle;
           transform-origin: middle;
+  -webkit-transform: translate(-50%, -100%);
+          transform: translate(-50%, -100%);
   top: 50%;
 }
 
-body #app #reader .ctrl-bar .ctrl-menu-extender-open .bar:nth-child(2) {
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .cont .bar:nth-child(2) {
   width: 0;
 }
 
-body #app #reader .ctrl-bar .ctrl-menu-extender-open .bar:nth-child(3) {
+body #app #reader .ctrl-bar .ctrl-menu-extender-open .cont .bar:nth-child(3) {
   -webkit-transform-origin: middle;
           transform-origin: middle;
-  -webkit-transform: translate(-50%, -50%) rotate(90deg);
-          transform: translate(-50%, -50%) rotate(90deg);
+  -webkit-transform: translate(-50%, -100%) rotate(calc(2 * var(--rotate)));
+          transform: translate(-50%, -100%) rotate(calc(2 * var(--rotate)));
   top: 50%;
 }
 
@@ -884,6 +1160,14 @@ body #app #reader .imgCont img {
   font-variant: normal;
   text-rendering: auto;
   line-height: 1;
+}
+
+.fa-sort:before {
+  content: "\f0dc";
+}
+
+.fa-cog:before {
+  content: "\f013";
 }
 
 .fa-home:before {

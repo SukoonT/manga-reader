@@ -1,7 +1,7 @@
 {
     "name": "mangareader",
     "productName": "Manga Reader",
-    "version": "1.0.2",
+    "version": "1.2.0",
     "description": "App to read manga on desktop",
     "main": "src/index.js",
     "scripts": {
@@ -9,11 +9,13 @@
         "package": "electron-forge package",
         "make": "electron-forge make",
         "publish": "electron-forge publish",
+        "pack": "electron-builder --dir",
+        "dist": "electron-builder",
         "lint": "echo \"No linting configured\""
     },
     "keywords": [],
     "author": {
-        "name": "SukoonT <https://github.com/SukoonT>",
+        "name": "mienaiyami <https://github.com/mienaiyami>",
         "email": "sukoonkumar2@gmail.com"
     },
     "license": "MIT",
@@ -60,6 +62,7 @@
         "@types/electron": "^1.6.10",
         "@types/jquery": "^3.5.5",
         "@types/node": "^15.12.4",
-        "electron": "13.1.1"
+        "electron": "13.1.1",
+        "electron-builder": "^22.11.7"
     }
 }
