@@ -1,14 +1,1 @@
-# Manga Reader
-
-[v1.2.0 Download App Here](https://mienaiyami.github.io/mangareader/)
-
----
-
-Desktop app for reading downloaded manga.
-**Not a downloader!!!**
-
----
-
-Built with ElectronJs.
-
----
+this is very old version, with bad code too, newer one here https://github.com/mienaiyami/react-ts-offline-manga-reader
